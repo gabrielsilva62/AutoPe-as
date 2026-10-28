@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veículos | AutoPeças</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu a i {
+            width: 19px;
+            height: 19px;
+            color: #f28c28;
+            flex-shrink: 0;
+        }
+
+        .icone-boas-vindas {
+            width: 54px;
+            height: 54px;
+            color: #f28c28;
+            flex-shrink: 0;
+        }
+
+        .icone-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icone-card i {
+            width: 23px;
+            height: 23px;
+            stroke-width: 1.8;
+        }
+
+        .icone-card.azul i { color: #3b82f6; }
+        .icone-card.roxo i { color: #8b5cf6; }
+        .icone-card.verde i { color: #22c55e; }
+        .icone-card.laranja i { color: #f28c28; }
+
+        .boas-vindas {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .acoes-veiculo {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .botao-excluir-veiculo {
+            background: #dc3545;
+            color: white;
+            border: none;
+        }
+
+        .botao-excluir-veiculo:hover {
+            background: #b02a37;
+        }
+
+        .resultado-busca {
+            margin: 12px 0;
+        }
+
+        tr[hidden] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">A</div>
+            <div>
+                <h2>Auto<span>Peças</span></h2>
+                <small>Sistema de Gestão</small>
+            </div>
+        </div>
+
+        <p class="menu-titulo">MENU PRINCIPAL</p>
+
+        <nav class="menu">
+            <a href="index.html"><i data-lucide="layout-dashboard"></i>Dashboard</a>
+            <a href="clientes.html"><i data-lucide="users-round"></i>Clientes</a>
+            <a href="veiculos.html" class="ativo"><i data-lucide="car-front"></i>Veículos</a>
+            <a href="produtos.html"><i data-lucide="package"></i>Produtos</a>
+            <a href="estoque.html"><i data-lucide="boxes"></i>Estoque</a>
+            <a href="orcamentos.html"><i data-lucide="file-text"></i>Orçamentos</a>
+            <a href="relatorios.html"><i data-lucide="chart-no-axes-column"></i>Relatórios</a>
+        </nav>
+
+        <div class="sidebar-rodape">
+            <span class="status-bolinha"></span>
+            <span>Sistema operacional</span>
+        </div>
+    </aside>
+
+    <main class="conteudo">
+
+        <header class="topo">
+            <div>
+                <h1>Veículos</h1>
+                <p>Gerencie os veículos cadastrados no sistema.</p>
+            </div>
+
+            <a href="#formulario-veiculo" class="botao botao-principal">
+                <i data-lucide="plus"></i>
+                Novo veículo
+            </a>
+        </header>
+
+        <section class="boas-vindas">
+            <div>
+                <h2>Cadastro de veículos</h2>
+                <p>
+                    Cadastre veículos, vincule-os aos clientes e mantenha
+                    as informações organizadas para agilizar os atendimentos.
+                </p>
+            </div>
+        </section>
+
+        <section class="indicadores">
+
+            <article class="card-indicador">
+                <div class="indicador-topo">
+                    <span>Total de veículos</span>
+                    <span class="icone-card azul"><i data-lucide="car-front"></i></span>
+                </div>
+                <h3 id="total-veiculos">0</h3>
+                <p class="texto-secundario">Veículos cadastrados</p>
+            </article>
+
+            <article class="card-indicador">
+                <div class="indicador-topo">
+                    <span>Carros</span>
+                    <span class="icone-card roxo"><i data-lucide="car"></i></span>
+                </div>
+                <h3 id="total-carros">0</h3>
+                <p class="texto-secundario">Automóveis cadastrados</p>
+            </article>
+
+            <article class="card-indicador">
+                <div class="indicador-topo">
+                    <span>Motocicletas</span>
+                    <span class="icone-card verde"><i data-lucide="bike"></i></span>
+                </div>
+                <h3 id="total-motos">0</h3>
+                <p class="texto-secundario">Motos cadastradas</p>
+            </article>
+
+            <article class="card-indicador">
+                <div class="indicador-topo">
+                    <span>Marcas cadastradas</span>
+                    <span class="icone-card laranja"><i data-lucide="settings"></i></span>
+                </div>
+                <h3 id="total-marcas">0</h3>
+                <p class="texto-secundario">Marcas diferentes</p>
+            </article>
+
+        </section>
+
+        <section class="secao" id="formulario-veiculo">
+            <div class="secao-cabecalho">
+                <div>
+                    <h2 id="titulo-formulario">Cadastrar veículo</h2>
+                    <p>Preencha as informações do veículo e do proprietário.</p>
+                </div>
+            </div>
+
+            <form id="form-veiculo">
+                <input type="hidden" id="veiculo-editando">
+
+                <div class="form-grid">
+
+                    <div class="campo">
+                        <label for="placa">Placa *</label>
+                        <input type="text" id="placa" maxlength="7"
+                               placeholder="ABC1D23" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="renavam">Renavam</label>
+                        <input type="text" id="renavam" maxlength="11"
+                               inputmode="numeric" placeholder="Número do Renavam">
+                    </div>
+
+                    <div class="campo">
+                        <label for="marca">Marca *</label>
+                        <input type="text" id="marca" placeholder="Ex.: Chevrolet" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="modelo">Modelo *</label>
+                        <input type="text" id="modelo" placeholder="Ex.: Onix" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="ano">Ano de fabricação *</label>
+                        <input type="number" id="ano" min="1900" max="2099"
+                               placeholder="Ex.: 2022" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="cor">Cor</label>
+                        <input type="text" id="cor" placeholder="Ex.: Prata">
+                    </div>
+
+                    <div class="campo">
+                        <label for="tipo">Tipo de veículo *</label>
+                        <select id="tipo" required>
+                            <option value="">Selecione</option>
+                            <option value="Carro">Carro</option>
+                            <option value="Motocicleta">Motocicleta</option>
+                            <option value="Caminhonete">Caminhonete</option>
+                            <option value="Caminhão">Caminhão</option>
+                            <option value="Van">Van</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="combustivel">Combustível</label>
+                        <select id="combustivel">
+                            <option value="">Selecione</option>
+                            <option value="Flex">Flex</option>
+                            <option value="Gasolina">Gasolina</option>
+                            <option value="Etanol">Etanol</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="GNV">GNV</option>
+                            <option value="Elétrico">Elétrico</option>
+                            <option value="Híbrido">Híbrido</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+
+                    <div class="campo campo-completo">
+                        <label for="proprietario">Nome do proprietário *</label>
+                        <input type="text" id="proprietario"
+                               placeholder="Nome completo do cliente" required>
+                    </div>
+
+                    <div class="campo campo-completo">
+                        <label for="observacoes">Observações</label>
+                        <textarea id="observacoes" rows="3"
+                                  placeholder="Informações adicionais sobre o veículo..."></textarea>
+                    </div>
+
+                </div>
+
+                <div class="form-acoes">
+                    <button type="button" id="cancelar-veiculo"
+                            class="botao botao-secundario">
+                        <i data-lucide="eraser"></i>
+                        Limpar formulário
+                    </button>
+
+                    <button type="submit" id="salvar-veiculo"
+                            class="botao botao-principal">
+                        <i data-lucide="plus"></i>
+                        Cadastrar veículo
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section class="secao">
+            <div class="secao-cabecalho">
+                <div>
+                    <h2>Veículos cadastrados</h2>
+                    <p>Consulte, pesquise, edite e exclua os veículos registrados.</p>
+                </div>
+            </div>
+
+            <div class="filtros">
+                <div class="campo busca">
+                    <label for="buscar-veiculo">Buscar veículo</label>
+                    <input type="search" id="buscar-veiculo"
+                           placeholder="Placa, marca, modelo ou proprietário...">
+                </div>
+
+                <button type="button" id="botao-buscar-veiculo"
+                        class="botao botao-principal">
+                    <i data-lucide="search"></i>Buscar
+                </button>
+
+                <button type="button" id="limpar-busca-veiculo"
+                        class="botao botao-secundario">
+                    <i data-lucide="x"></i>Limpar
+                </button>
+            </div>
+
+            <p id="resultado-busca-veiculo" class="resultado-busca"
+               aria-live="polite"></p>
+
+            <div class="tabela-container">
+                <table id="tabela-veiculos">
+                    <thead>
+                        <tr>
+                            <th>Placa</th>
+                            <th>Marca / Modelo</th>
+                            <th>Ano</th>
+                            <th>Tipo</th>
+                            <th>Proprietário</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="rodape">
+            <p>Sistema AutoPeças — Gestão de veículos e clientes</p>
+        </footer>
+
+    </main>
+
+    <script>
+        const CHAVE_VEICULOS = "autopecas_veiculos";
+
+        const formularioVeiculo = document.getElementById("form-veiculo");
+        const veiculoEditando = document.getElementById("veiculo-editando");
+        const botaoSalvarVeiculo = document.getElementById("salvar-veiculo");
+        const botaoCancelarVeiculo = document.getElementById("cancelar-veiculo");
+        const corpoTabelaVeiculos = document.querySelector("#tabela-veiculos tbody");
+        const campoBuscaVeiculo = document.getElementById("buscar-veiculo");
+        const resultadoBuscaVeiculo = document.getElementById("resultado-busca-veiculo");
+
+        const camposVeiculo = {
+            placa: document.getElementById("placa"),
+            renavam: document.getElementById("renavam"),
+            marca: document.getElementById("marca"),
+            modelo: document.getElementById("modelo"),
+            ano: document.getElementById("ano"),
+            cor: document.getElementById("cor"),
+            tipo: document.getElementById("tipo"),
+            combustivel: document.getElementById("combustivel"),
+            proprietario: document.getElementById("proprietario"),
+            observacoes: document.getElementById("observacoes")
+        };
+
+        const veiculosIniciais = [
+            {
+                placa: "ABC1D23",
+                renavam: "12345678901",
+                marca: "Chevrolet",
+                modelo: "Onix",
+                ano: "2022",
+                cor: "Prata",
+                tipo: "Carro",
+                combustivel: "Flex",
+                proprietario: "João da Silva",
+                observacoes: ""
+            },
+            {
+                placa: "DEF4G56",
+                renavam: "23456789012",
+                marca: "Volkswagen",
+                modelo: "Gol",
+                ano: "2020",
+                cor: "Branco",
+                tipo: "Carro",
+                combustivel: "Flex",
+                proprietario: "Maria Oliveira",
+                observacoes: ""
+            },
+            {
+                placa: "GHI7J89",
+                renavam: "34567890123",
+                marca: "Honda",
+                modelo: "CG 160",
+                ano: "2023",
+                cor: "Vermelha",
+                tipo: "Motocicleta",
+                combustivel: "Gasolina",
+                proprietario: "Pedro Santos",
+                observacoes: ""
+            }
+        ];
+
+        function obterVeiculos() {
+            try {
+                const dados = localStorage.getItem(CHAVE_VEICULOS);
+
+                if (dados === null) {
+                    localStorage.setItem(
+                        CHAVE_VEICULOS,
+                        JSON.stringify(veiculosIniciais)
+                    );
+                    return [...veiculosIniciais];
+                }
+
+                const veiculos = JSON.parse(dados);
+                return Array.isArray(veiculos) ? veiculos : [];
+            } catch (erro) {
+                alert("Não foi possível ler os veículos salvos neste navegador.");
+                return [];
+            }
+        }
+
+        function salvarVeiculos(veiculos) {
+            try {
+                localStorage.setItem(CHAVE_VEICULOS, JSON.stringify(veiculos));
+                return true;
+            } catch (erro) {
+                alert("Não foi possível salvar os dados. Verifique o armazenamento do navegador.");
+                return false;
+            }
+        }
+
+        function atualizarIndicadoresVeiculos(veiculos) {
+            document.getElementById("total-veiculos").textContent = veiculos.length;
+
+            document.getElementById("total-carros").textContent =
+                veiculos.filter(v => v.tipo === "Carro").length;
+
+            document.getElementById("total-motos").textContent =
+                veiculos.filter(v => v.tipo === "Motocicleta").length;
+
+            const marcas = new Set(
+                veiculos.map(v => (v.marca || "").trim().toLocaleLowerCase("pt-BR"))
+                    .filter(Boolean)
+            );
+
+            document.getElementById("total-marcas").textContent = marcas.size;
+        }
+
+        function criarCelula(texto) {
+            const celula = document.createElement("td");
+            celula.textContent = texto || "—";
+            return celula;
+        }
+
+        function renderizarVeiculos() {
+            const veiculos = obterVeiculos();
+            corpoTabelaVeiculos.replaceChildren();
+
+            veiculos.forEach(function(veiculo) {
+                const linha = document.createElement("tr");
+                linha.dataset.placa = veiculo.placa;
+
+                linha.appendChild(criarCelula(veiculo.placa));
+                linha.appendChild(criarCelula(veiculo.marca + " " + veiculo.modelo));
+                linha.appendChild(criarCelula(veiculo.ano));
+                linha.appendChild(criarCelula(veiculo.tipo));
+                linha.appendChild(criarCelula(veiculo.proprietario));
+
+                const celulaAcoes = document.createElement("td");
+                const acoes = document.createElement("div");
+                acoes.className = "acoes-veiculo";
+
+                const botaoEditar = document.createElement("button");
+                botaoEditar.type = "button";
+                botaoEditar.className = "botao botao-principal botao-editar-veiculo";
+                botaoEditar.innerHTML = '<i data-lucide="pencil"></i> Editar';
+                botaoEditar.addEventListener("click", function() {
+                    editarVeiculo(veiculo.placa);
+                });
+
+                const botaoExcluir = document.createElement("button");
+                botaoExcluir.type = "button";
+                botaoExcluir.className = "botao botao-excluir-veiculo";
+                botaoExcluir.innerHTML = '<i data-lucide="trash-2"></i> Excluir';
+                botaoExcluir.addEventListener("click", function() {
+                    excluirVeiculo(veiculo.placa);
+                });
+
+                acoes.append(botaoEditar, botaoExcluir);
+                celulaAcoes.appendChild(acoes);
+                linha.appendChild(celulaAcoes);
+                corpoTabelaVeiculos.appendChild(linha);
+            });
+
+            atualizarIndicadoresVeiculos(veiculos);
+            buscarVeiculos();
+            lucide.createIcons();
+        }
+
+        function limparFormularioVeiculo() {
+            formularioVeiculo.reset();
+            veiculoEditando.value = "";
+
+            botaoSalvarVeiculo.innerHTML =
+                '<i data-lucide="plus"></i> Cadastrar veículo';
+
+            document.getElementById("titulo-formulario").textContent =
+                "Cadastrar veículo";
+
+            lucide.createIcons();
+        }
+
+        function editarVeiculo(placa) {
+            const veiculos = obterVeiculos();
+            const veiculo = veiculos.find(v => v.placa === placa);
+
+            if (!veiculo) {
+                alert("Veículo não encontrado.");
+                return;
+            }
+
+            veiculoEditando.value = veiculo.placa;
+
+            Object.keys(camposVeiculo).forEach(function(campo) {
+                camposVeiculo[campo].value = veiculo[campo] || "";
+            });
+
+            botaoSalvarVeiculo.innerHTML =
+                '<i data-lucide="save"></i> Salvar alterações';
+
+            document.getElementById("titulo-formulario").textContent =
+                "Editar veículo";
+
+            lucide.createIcons();
+
+            document.getElementById("formulario-veiculo").scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+
+        function excluirVeiculo(placa) {
+            const veiculos = obterVeiculos();
+            const veiculo = veiculos.find(v => v.placa === placa);
+
+            if (!veiculo) {
+                alert("Veículo não encontrado.");
+                return;
+            }
+
+            const confirmar = confirm(
+                "Deseja realmente excluir o veículo " +
+                veiculo.placa + " — " + veiculo.marca + " " + veiculo.modelo + "?"
+            );
+
+            if (!confirmar) return;
+
+            const atualizados = veiculos.filter(v => v.placa !== placa);
+
+            if (!salvarVeiculos(atualizados)) return;
+
+            if (veiculoEditando.value === placa) {
+                limparFormularioVeiculo();
+            }
+
+            renderizarVeiculos();
+            alert("Veículo excluído com sucesso!");
+        }
+
+        camposVeiculo.placa.addEventListener("input", function() {
+            this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 7);
+        });
+
+        camposVeiculo.renavam.addEventListener("input", function() {
+            this.value = this.value.replace(/\D/g, "").slice(0, 11);
+        });
+
+        formularioVeiculo.addEventListener("submit", function(evento) {
+            evento.preventDefault();
+
+            const dados = {};
+
+            Object.keys(camposVeiculo).forEach(function(campo) {
+                dados[campo] = camposVeiculo[campo].value.trim();
+            });
+
+            dados.placa = dados.placa.toUpperCase();
+
+            if (!/^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/.test(dados.placa)) {
+                alert("Informe uma placa válida, como ABC1234 ou ABC1D23.");
+                camposVeiculo.placa.focus();
+                return;
+            }
+
+            const ano = Number(dados.ano);
+            const anoAtual = new Date().getFullYear();
+
+            if (!Number.isInteger(ano) || ano < 1900 || ano > anoAtual + 1) {
+                alert("Informe um ano de fabricação válido.");
+                camposVeiculo.ano.focus();
+                return;
+            }
+
+            if (dados.renavam && !/^\d{1,11}$/.test(dados.renavam)) {
+                alert("O Renavam deve conter somente números.");
+                camposVeiculo.renavam.focus();
+                return;
+            }
+
+            const veiculos = obterVeiculos();
+            const placaDuplicada = veiculos.some(function(v) {
+                return v.placa.toUpperCase() === dados.placa &&
+                    v.placa !== veiculoEditando.value;
+            });
+
+            if (placaDuplicada) {
+                alert("Já existe um veículo cadastrado com essa placa.");
+                camposVeiculo.placa.focus();
+                return;
+            }
+
+            let atualizados;
+
+            if (veiculoEditando.value) {
+                const existe = veiculos.some(v => v.placa === veiculoEditando.value);
+
+                if (!existe) {
+                    alert("Não foi possível localizar o veículo que será editado.");
+                    return;
+                }
+
+                atualizados = veiculos.map(function(v) {
+                    return v.placa === veiculoEditando.value ? dados : v;
+                });
+            } else {
+                atualizados = [...veiculos, dados];
+            }
+
+            if (!salvarVeiculos(atualizados)) return;
+
+            const estavaEditando = Boolean(veiculoEditando.value);
+
+            limparFormularioVeiculo();
+            renderizarVeiculos();
+
+            alert(estavaEditando
+                ? "Veículo atualizado com sucesso!"
+                : "Veículo cadastrado com sucesso!");
+        });
+
+        botaoCancelarVeiculo.addEventListener("click", function() {
+            limparFormularioVeiculo();
+        });
+
+        function buscarVeiculos() {
+            const termo = campoBuscaVeiculo.value.trim().toLocaleLowerCase("pt-BR");
+            const linhas = Array.from(corpoTabelaVeiculos.rows);
+            let encontrados = 0;
+
+            linhas.forEach(function(linha) {
+                const corresponde = linha.textContent
+                    .toLocaleLowerCase("pt-BR")
+                    .includes(termo);
+
+                linha.hidden = !corresponde;
+
+                if (corresponde) encontrados++;
+            });
+
+            if (!termo) {
+                resultadoBuscaVeiculo.textContent =
+                    "Exibindo todos os " + linhas.length +
+                    (linhas.length === 1 ? " veículos." : " veículos.");
+            } else if (encontrados === 0) {
+                resultadoBuscaVeiculo.textContent = "Nenhum veículo encontrado.";
+            } else {
+                resultadoBuscaVeiculo.textContent =
+                    encontrados +
+                    (encontrados === 1
+                        ? " veículo encontrado."
+                        : " veículos encontrados.");
+            }
+        }
+
+        document.getElementById("botao-buscar-veiculo")
+            .addEventListener("click", buscarVeiculos);
+
+        campoBuscaVeiculo.addEventListener("input", buscarVeiculos);
+
+        campoBuscaVeiculo.addEventListener("keydown", function(evento) {
+            if (evento.key === "Enter") {
+                evento.preventDefault();
+                buscarVeiculos();
+            }
+        });
+
+        document.getElementById("limpar-busca-veiculo")
+            .addEventListener("click", function() {
+                campoBuscaVeiculo.value = "";
+                buscarVeiculos();
+                campoBuscaVeiculo.focus();
+            });
+
+        renderizarVeiculos();
+        lucide.createIcons();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,399 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | AutoPeças</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --laranja: #f28c28;
+            --laranja-hover: #dc7615;
+            --azul: #202936;
+            --fundo: #f4f6f9;
+            --cinza: #7a8698;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            font-family: Arial, sans-serif;
+            background: var(--fundo);
+            color: var(--azul);
+        }
+
+        .apresentacao {
+            width: 50%;
+            min-height: 100vh;
+            padding: 45px 7%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: white;
+            background: radial-gradient(circle at 80% 20%, #3b4654, transparent 40%),
+                        linear-gradient(145deg, #202936, #101722);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icone {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: var(--laranja);
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .logo h1 {
+            font-size: 25px;
+        }
+
+        .logo h1 span {
+            color: var(--laranja);
+        }
+
+        .logo small {
+            display: block;
+            margin-top: 4px;
+            color: #b9c2cf;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        .texto-apresentacao {
+            max-width: 480px;
+            margin: 45px 0;
+        }
+
+        .etiqueta {
+            color: #ffbd78;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .texto-apresentacao h2 {
+            margin: 22px 0;
+            font-size: clamp(34px, 4vw, 52px);
+            line-height: 1.15;
+        }
+
+        .texto-apresentacao h2 span {
+            color: var(--laranja);
+        }
+
+        .texto-apresentacao p {
+            color: #c1c9d4;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .beneficios {
+            margin-top: 32px;
+            display: grid;
+            gap: 18px;
+            color: #e1e6ed;
+            font-size: 14px;
+        }
+
+        .apresentacao footer {
+            color: #929eae;
+            font-size: 12px;
+        }
+
+        .area-login {
+            width: 50%;
+            min-height: 100vh;
+            padding: 30px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .formulario {
+            width: 100%;
+            max-width: 410px;
+        }
+
+        .formulario h2 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .subtitulo {
+            color: var(--cinza);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .campo {
+            margin-bottom: 20px;
+        }
+
+        .campo label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .campo input {
+            width: 100%;
+            height: 49px;
+            padding: 0 14px;
+            border: 1px solid #dce2ea;
+            border-radius: 9px;
+            outline: none;
+            background: white;
+            font-size: 14px;
+        }
+
+        .campo input:focus {
+            border-color: var(--laranja);
+            box-shadow: 0 0 0 3px #f28c2820;
+        }
+
+        .senha {
+            position: relative;
+        }
+
+        .senha input {
+            padding-right: 75px;
+        }
+
+        .mostrar {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 0;
+            background: none;
+            color: #69778a;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .opcoes {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 4px 0 25px;
+            font-size: 12px;
+        }
+
+        .lembrar {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #586579;
+        }
+
+        a {
+            color: var(--laranja-hover);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .botao {
+            width: 100%;
+            height: 50px;
+            border: 0;
+            border-radius: 9px;
+            background: var(--laranja);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .botao:hover {
+            background: var(--laranja-hover);
+        }
+
+        .mensagem {
+            display: none;
+            padding: 12px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            background: #fff0df;
+            color: #8c4d0c;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .cadastro {
+            margin-top: 28px;
+            text-align: center;
+            color: var(--cinza);
+            font-size: 13px;
+        }
+
+        .ajuda {
+            margin-top: 35px;
+            text-align: center;
+            color: var(--cinza);
+            font-size: 12px;
+        }
+
+        @media (max-width: 800px) {
+            .apresentacao {
+                display: none;
+            }
+
+            .area-login {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="apresentacao">
+        <div class="logo">
+            <div class="logo-icone">A</div>
+            <div>
+                <h1>Auto<span>Peças</span></h1>
+                <small>GESTÃO AUTOMOTIVA</small>
+            </div>
+        </div>
+
+        <div class="texto-apresentacao">
+            <span class="etiqueta">ÁREA DO CLIENTE</span>
+
+            <h2>Sua experiência automotiva, <span>mais simples.</span></h2>
+
+            <p>
+                Acesse sua conta para acompanhar seus orçamentos,
+                consultar suas solicitações e manter seus dados organizados.
+            </p>
+
+            <div class="beneficios">
+                <span>✓ Acompanhe seus orçamentos</span>
+                <span>✓ Consulte suas solicitações</span>
+                <span>✓ Tenha seus dados sempre à mão</span>
+            </div>
+        </div>
+
+        <footer>© 2026 AutoPeças. Todos os direitos reservados.</footer>
+    </section>
+
+    <main class="area-login">
+        <div class="formulario">
+            <h2>Bem-vindo de volta!</h2>
+            <p class="subtitulo">Entre com seus dados para acessar sua conta.</p>
+
+            <div class="mensagem" id="mensagem" role="status"></div>
+
+            <form id="formLogin">
+                <div class="campo">
+                    <label for="email">E-mail</label>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="seuemail@exemplo.com"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="senha">Senha</label>
+                    <div class="senha">
+                        <input
+                            type="password"
+                            id="senha"
+                            placeholder="Digite sua senha"
+                            autocomplete="current-password"
+                            required
+                        >
+                        <button type="button" class="mostrar" id="mostrar">
+                            Mostrar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="opcoes">
+                    <label class="lembrar">
+                        <input type="checkbox" id="lembrar">
+                        Lembrar meu e-mail
+                    </label>
+
+                    <a href="recuperar-senha.html">Esqueci minha senha</a>
+                </div>
+
+                <button class="botao" type="submit">Entrar na minha conta →</button>
+            </form>
+
+            <div class="cadastro">
+                Ainda não tem uma conta?
+                <a href="cadastro-cliente.html">Cadastre-se</a>
+            </div>
+
+            <div class="ajuda">
+                Precisa de ajuda?
+                <a href="contato.html">Fale conosco</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const email = document.getElementById("email");
+        const senha = document.getElementById("senha");
+        const mensagem = document.getElementById("mensagem");
+
+        document.getElementById("mostrar").addEventListener("click", function () {
+            const mostrarSenha = senha.type === "password";
+            senha.type = mostrarSenha ? "text" : "password";
+            this.textContent = mostrarSenha ? "Ocultar" : "Mostrar";
+        });
+
+        try {
+            const emailSalvo = localStorage.getItem("autopecas_email_lembrado");
+
+            if (emailSalvo) {
+                email.value = emailSalvo;
+                document.getElementById("lembrar").checked = true;
+            }
+        } catch (erro) {}
+
+        document.getElementById("formLogin").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            mensagem.style.display = "block";
+            mensagem.textContent =
+                "A interface está pronta, mas o login ainda precisa ser conectado ao sistema de autenticação. Nenhuma senha foi validada.";
+
+            if (document.getElementById("lembrar").checked) {
+                try {
+                    localStorage.setItem("autopecas_email_lembrado", email.value.trim());
+                } catch (erro) {}
+            } else {
+                try {
+                    localStorage.removeItem("autopecas_email_lembrado");
+                } catch (erro) {}
+            }
+        });
+    </script>
+
+</body>
+</html>

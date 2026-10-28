@@ -1,0 +1,638 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orçamentos | AutoPeças</title>
+
+    <link rel="stylesheet" href="css/estilo.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+    
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu a i {
+            width: 19px;
+            height: 19px;
+            color: #f28c28;
+            flex-shrink: 0;
+        }
+
+
+        .painel-icone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .painel-icone i {
+            width: 42px;
+            height: 42px;
+            stroke-width: 1.7;
+        }
+
+
+        .resumo-orcamentos {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .resumo-card {
+            background: #fff;
+            border: 1px solid #e1e7ef;
+            border-radius: 12px;
+            padding: 22px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .resumo-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(20, 40, 70, 0.08);
+        }
+
+        .resumo-card p {
+            color: #78879b;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .resumo-card h3 {
+            color: #25364b;
+            font-size: 28px;
+            overflow-wrap: anywhere;
+        }
+
+        .resumo-topo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .resumo-icone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .resumo-icone i {
+            width: 22px;
+            height: 22px;
+        }
+
+        .resumo-icone.azul {
+            color: #3478d4;
+            background: #e8f1ff;
+        }
+
+        .resumo-icone.laranja {
+            color: #d98216;
+            background: #fff2d8;
+        }
+
+        .resumo-icone.verde {
+            color: #18864b;
+            background: #e0f7e9;
+        }
+
+        
+        .status-orcamento {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .pendente {
+            background: #fff2d8;
+            color: #a86a09;
+        }
+
+        .aprovado {
+            background: #e0f7e9;
+            color: #18864b;
+        }
+
+        .recusado {
+            background: #fde7e7;
+            color: #bd3030;
+        }
+
+        .vencido {
+            background: #eee7ff;
+            color: #7043b5;
+        }
+
+        .acoes-tabela {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .botao-pequeno {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 7px 10px;
+            border: 1px solid #dce4ee;
+            border-radius: 6px;
+            background: #fff;
+            color: #354357;
+            cursor: pointer;
+            font: inherit;
+            font-size: 12px;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .botao-pequeno:hover {
+            background: #f3f6fa;
+            border-color: #b9c7d8;
+        }
+
+        .botao-pequeno i {
+            width: 15px;
+            height: 15px;
+        }
+
+        .botao-excluir {
+            color: #bd3030;
+        }
+
+        .botao-excluir:hover {
+            background: #fff0f0;
+            border-color: #efb6b6;
+        }
+
+        .filtros-orcamento {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .filtros-orcamento input,
+        .filtros-orcamento select {
+            min-height: 43px;
+            padding: 10px 12px;
+            border: 1px solid #dce4ee;
+            border-radius: 8px;
+            background: #fff;
+            font: inherit;
+            color: #354357;
+        }
+
+        .filtros-orcamento input {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .filtros-orcamento input:focus,
+        .filtros-orcamento select:focus {
+            outline: 2px solid rgba(242, 140, 40, 0.25);
+            border-color: #f28c28;
+        }
+
+        .botao-com-icone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .botao-com-icone i {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+        .tabela-container td {
+            vertical-align: middle;
+        }
+
+        .vazio {
+            padding: 30px;
+            text-align: center;
+            color: #78879b;
+        }
+
+        .vazio[hidden] {
+            display: none;
+        }
+
+        .titulo-com-icone {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .titulo-com-icone i {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 760px) {
+            .resumo-orcamentos {
+                grid-template-columns: 1fr;
+            }
+
+            .filtros-orcamento {
+                flex-direction: column;
+            }
+
+            .acoes-tabela {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">A</div>
+
+            <div>
+                <h2>Auto<span>Peças</span></h2>
+                <small>Sistema de Gestão</small>
+            </div>
+        </div>
+
+        <p class="menu-titulo">MENU PRINCIPAL</p>
+
+        <nav class="menu">
+            <a href="index.html">
+                <i data-lucide="layout-dashboard"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="clientes.html">
+                <i data-lucide="users-round"></i>
+                <span>Clientes</span>
+            </a>
+
+            <a href="veiculos.html">
+                <i data-lucide="car-front"></i>
+                <span>Veículos</span>
+            </a>
+
+            <a href="produtos.html">
+                <i data-lucide="package"></i>
+                <span>Produtos</span>
+            </a>
+
+            <a href="estoque.html">
+                <i data-lucide="boxes"></i>
+                <span>Estoque</span>
+            </a>
+
+            <a href="orcamentos.html" class="ativo">
+                <i data-lucide="file-text"></i>
+                <span>Orçamentos</span>
+            </a>
+
+            <a href="relatorios.html">
+                <i data-lucide="chart-no-axes-column"></i>
+                <span>Relatórios</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-rodape">
+            <span class="status-bolinha"></span>
+
+            <div>
+                <p>Sistema operacional</p>
+                <small>AutoPeças Gestão</small>
+            </div>
+        </div>
+    </aside>
+
+    <main class="conteudo">
+
+        <section class="painel-controle">
+            <div class="painel-texto">
+                <span class="painel-etiqueta">GESTÃO COMERCIAL</span>
+
+                <h2>Orçamentos</h2>
+
+                <p>
+                    Consulte e acompanhe os orçamentos dos seus clientes,
+                    confira valores e gerencie as situações de cada registro.
+                </p>
+            </div>
+
+        </section>
+
+        <section class="resumo-orcamentos">
+
+            <article class="resumo-card">
+                <div class="resumo-topo">
+                    <p>Total de orçamentos</p>
+
+                    <span class="resumo-icone azul">
+                        <i data-lucide="files"></i>
+                    </span>
+                </div>
+
+                <h3 id="totalOrcamentos">0</h3>
+            </article>
+
+            <article class="resumo-card">
+                <div class="resumo-topo">
+                    <p>Orçamentos pendentes</p>
+
+                    <span class="resumo-icone laranja">
+                        <i data-lucide="clock-3"></i>
+                    </span>
+                </div>
+
+                <h3 id="totalPendentes">0</h3>
+            </article>
+
+            <article class="resumo-card">
+                <div class="resumo-topo">
+                    <p>Valor total cadastrado</p>
+
+                    <span class="resumo-icone verde">
+                        <i data-lucide="wallet"></i>
+                    </span>
+                </div>
+
+                <h3 id="valorTotal">R$ 0,00</h3>
+            </article>
+
+        </section>
+
+        <section class="secao">
+            <div class="secao-cabecalho">
+                <div>
+                    <h2 class="titulo-com-icone">
+                        <i data-lucide="clipboard-list"></i>
+                        Lista de orçamentos
+                    </h2>
+
+                    <p>Pesquise, consulte, edite ou exclua registros.</p>
+                </div>
+
+                <a
+                    href="novo-orcamento.html"
+                    class="botao botao-principal botao-com-icone"
+                >
+                    <i data-lucide="plus"></i>
+                    Novo orçamento
+                </a>
+            </div>
+
+            <div class="filtros-orcamento">
+                <input
+                    type="search"
+                    id="pesquisa"
+                    aria-label="Pesquisar orçamento"
+                    placeholder="Pesquisar por número ou cliente..."
+                >
+
+                <select id="filtroStatus" aria-label="Filtrar por situação">
+                    <option value="">Todas as situações</option>
+                    <option value="Pendente">Pendente</option>
+                    <option value="Aprovado">Aprovado</option>
+                    <option value="Recusado">Recusado</option>
+                    <option value="Vencido">Vencido</option>
+                </select>
+            </div>
+
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Cliente</th>
+                            <th>Data</th>
+                            <th>Validade</th>
+                            <th>Valor total</th>
+                            <th>Situação</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="listaOrcamentos"></tbody>
+                </table>
+            </div>
+
+            <p
+                id="mensagemVazia"
+                class="vazio"
+                aria-live="polite"
+                hidden
+            >
+                Nenhum orçamento encontrado.
+            </p>
+        </section>
+
+        <footer class="rodape">
+            <span>AutoPeças Gestão</span>
+            <span>Controle de orçamentos</span>
+        </footer>
+
+    </main>
+
+    <script>
+        const CHAVE = "autopecas_orcamentos";
+
+        function carregarOrcamentos() {
+            try {
+                const dados = JSON.parse(localStorage.getItem(CHAVE));
+                return Array.isArray(dados) ? dados : [];
+            } catch (erro) {
+                console.error("Erro ao carregar os orçamentos:", erro);
+                return [];
+            }
+        }
+
+        function salvarOrcamentos(lista) {
+            try {
+                localStorage.setItem(CHAVE, JSON.stringify(lista));
+                return true;
+            } catch (erro) {
+                alert("Não foi possível salvar os dados no navegador.");
+                console.error("Erro ao salvar os orçamentos:", erro);
+                return false;
+            }
+        }
+
+        function moeda(valor) {
+            return Number(valor || 0).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            });
+        }
+
+        function escapar(texto) {
+            return String(texto ?? "").replace(/[&<>"']/g, caractere => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[caractere]);
+        }
+
+        function classeStatus(status) {
+            return {
+                "Pendente": "pendente",
+                "Aprovado": "aprovado",
+                "Recusado": "recusado",
+                "Vencido": "vencido"
+            }[status] || "pendente";
+        }
+
+        function renderizar() {
+            const orcamentos = carregarOrcamentos();
+
+            const pesquisa = document.getElementById("pesquisa")
+                .value.trim().toLocaleLowerCase("pt-BR");
+
+            const filtro = document.getElementById("filtroStatus").value;
+
+            const filtrados = orcamentos.filter(orcamento => {
+                const texto =
+                    `${orcamento.numero ?? ""} ${orcamento.cliente ?? ""}`
+                    .toLocaleLowerCase("pt-BR");
+
+                return texto.includes(pesquisa) &&
+                    (!filtro || orcamento.status === filtro);
+            });
+
+            document.getElementById("totalOrcamentos").textContent =
+                orcamentos.length;
+
+            document.getElementById("totalPendentes").textContent =
+                orcamentos.filter(
+                    orcamento => orcamento.status === "Pendente"
+                ).length;
+
+            const somaTotal = orcamentos.reduce(
+                (soma, orcamento) =>
+                    soma + Number(orcamento.total || 0),
+                0
+            );
+
+            document.getElementById("valorTotal").textContent =
+                moeda(somaTotal);
+
+        
+            const corpo = document.getElementById("listaOrcamentos");
+
+            corpo.innerHTML = filtrados.map(orcamento => `
+                <tr>
+                    <td>${escapar(orcamento.numero || "-")}</td>
+                    <td>${escapar(orcamento.cliente || "-")}</td>
+                    <td>${escapar(orcamento.data || "-")}</td>
+                    <td>${escapar(orcamento.validade || "-")}</td>
+                    <td>${moeda(orcamento.total)}</td>
+
+                    <td>
+                        <span class="status-orcamento ${classeStatus(orcamento.status)}">
+                            ${escapar(orcamento.status || "Pendente")}
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="acoes-tabela">
+                            <button
+                                type="button"
+                                class="botao-pequeno"
+                                data-editar="${escapar(orcamento.id)}"
+                                aria-label="Editar orçamento ${escapar(orcamento.numero || "")}"
+                            >
+                                <i data-lucide="pencil"></i>
+                                Editar
+                            </button>
+
+                            <button
+                                type="button"
+                                class="botao-pequeno botao-excluir"
+                                data-excluir="${escapar(orcamento.id)}"
+                                aria-label="Excluir orçamento ${escapar(orcamento.numero || "")}"
+                            >
+                                <i data-lucide="trash-2"></i>
+                                Excluir
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join("");
+
+            document.getElementById("mensagemVazia").hidden =
+                filtrados.length !== 0;
+
+    
+            lucide.createIcons();
+        }
+
+  
+        document.getElementById("pesquisa")
+            .addEventListener("input", renderizar);
+
+     
+        document.getElementById("filtroStatus")
+            .addEventListener("change", renderizar);
+
+
+        document.getElementById("listaOrcamentos")
+            .addEventListener("click", event => {
+                const editar = event.target.closest("[data-editar]");
+                const excluir = event.target.closest("[data-excluir]");
+
+                if (editar) {
+                    const id = editar.dataset.editar;
+
+                    window.location.href =
+                        "novo-orcamento.html?id=" +
+                        encodeURIComponent(id);
+
+                    return;
+                }
+
+                if (excluir) {
+                    const id = excluir.dataset.excluir;
+
+                    if (!confirm(
+                        "Deseja realmente excluir este orçamento?"
+                    )) {
+                        return;
+                    }
+
+                    const atualizados = carregarOrcamentos()
+                        .filter(orcamento =>
+                            String(orcamento.id) !== String(id)
+                        );
+
+                    if (salvarOrcamentos(atualizados)) {
+                        renderizar();
+                    }
+                }
+            });
+
+        
+        renderizar();
+        lucide.createIcons();
+    </script>
+
+</body>
+</html>
+```

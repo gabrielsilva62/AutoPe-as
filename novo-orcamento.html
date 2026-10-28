@@ -1,0 +1,912 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo orçamento | AutoPeças</title>
+    <link rel="stylesheet" href="css/estilo.css">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+    
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu a i {
+            width: 19px;
+            height: 19px;
+            color: #f28c28;
+            flex-shrink: 0;
+        }
+
+        .painel-icone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .painel-icone i {
+            width: 34px;
+            height: 34px;
+            stroke-width: 1.8;
+        }
+
+    
+        .botao {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .botao i {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+
+        .linha-produto {
+            display: grid;
+            grid-template-columns: minmax(190px, 2fr) minmax(90px, .7fr) minmax(120px, 1fr) minmax(120px, 1fr) 44px;
+            gap: 12px;
+            align-items: end;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #e1e7ef;
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        .linha-produto .campo {
+            min-width: 0;
+        }
+
+        .linha-produto .campo input,
+        .linha-produto .campo select {
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        .remover-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 43px;
+            border: 1px solid #f2caca;
+            background: #fff3f3;
+            color: #bd3030;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background .2s, transform .2s;
+        }
+
+        .remover-item:hover {
+            background: #ffe1e1;
+            transform: scale(1.03);
+        }
+
+        .remover-item i {
+            width: 18px;
+            height: 18px;
+        }
+
+        .linha-produto .campo label {
+            line-height: 1.3;
+        }
+
+        
+        .totais {
+            margin-left: auto;
+            width: min(100%, 360px);
+            padding: 20px;
+            border: 1px solid #e1e7ef;
+            border-radius: 12px;
+            background: #f8fafc;
+            box-sizing: border-box;
+        }
+
+        .total-linha {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 12px;
+            color: #526176;
+            font-size: 14px;
+        }
+
+        .total-final {
+            padding-top: 14px;
+            margin-top: 14px;
+            border-top: 1px solid #dce4ee;
+            color: #25364b;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        
+        .aviso {
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            background: #fff7e8;
+            color: #80520c;
+            font-size: 13px;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .aviso i {
+            width: 19px;
+            height: 19px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .mensagem {
+            display: none;
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            background: #e0f7e9;
+            color: #18864b;
+            font-size: 13px;
+        }
+
+        .mensagem.erro {
+            background: #fde7e7;
+            color: #bd3030;
+        }
+
+        .acoes-final {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        @media (max-width: 1050px) {
+            .linha-produto {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .remover-item {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .linha-produto {
+                grid-template-columns: 1fr;
+            }
+
+            .totais {
+                width: 100%;
+            }
+
+            .acoes-final {
+                flex-direction: column-reverse;
+            }
+
+            .acoes-final .botao {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+    <div class="logo">
+        <div class="logo-icon">A</div>
+        <div>
+            <h2>Auto<span>Peças</span></h2>
+            <small>Sistema de Gestão</small>
+        </div>
+    </div>
+
+    <p class="menu-titulo">MENU PRINCIPAL</p>
+
+    <nav class="menu">
+        <a href="index.html">
+            <i data-lucide="layout-dashboard"></i>
+            Dashboard
+        </a>
+
+        <a href="clientes.html">
+            <i data-lucide="users-round"></i>
+            Clientes
+        </a>
+
+        <a href="veiculos.html">
+            <i data-lucide="car-front"></i>
+            Veículos
+        </a>
+
+        <a href="produtos.html">
+            <i data-lucide="package"></i>
+            Produtos
+        </a>
+
+        <a href="estoque.html">
+            <i data-lucide="boxes"></i>
+            Estoque
+        </a>
+
+        <a href="orcamentos.html" class="ativo">
+            <i data-lucide="file-text"></i>
+            Orçamentos
+        </a>
+
+        <a href="relatorios.html">
+            <i data-lucide="chart-no-axes-column"></i>
+            Relatórios
+        </a>
+    </nav>
+
+    <div class="sidebar-rodape">
+        <span class="status-bolinha"></span>
+        <div>
+            <p>Sistema operacional</p>
+            <small>AutoPeças Gestão</small>
+        </div>
+    </div>
+</aside>
+
+<main class="conteudo">
+
+    <section class="painel-controle">
+        <div class="painel-texto">
+            <span class="painel-etiqueta">GESTÃO COMERCIAL</span>
+            <h2 id="tituloPagina">Novo orçamento</h2>
+            <p>Cadastre o cliente, adicione produtos e confira o valor total.</p>
+        </div>
+    </section>
+
+    <div id="mensagem" class="mensagem" role="status"></div>
+
+    <div class="aviso">
+        <i data-lucide="info"></i>
+        <span>
+            Os clientes e produtos são carregados do armazenamento local quando
+            existir uma lista compatível. Se ainda não houver cadastros disponíveis,
+            você poderá preencher o nome do cliente e inserir os produtos manualmente.
+        </span>
+    </div>
+
+    <form id="formOrcamento">
+
+        <section class="secao">
+            <div class="secao-cabecalho">
+                <div>
+                    <h2>Dados do orçamento</h2>
+                    <p>Informe os dados principais da proposta.</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="campo">
+                    <label for="numero">Número do orçamento</label>
+                    <input id="numero" name="numero" readonly>
+                </div>
+
+                <div class="campo">
+                    <label for="cliente">Cliente *</label>
+                    <input
+                        id="cliente"
+                        name="cliente"
+                        list="clientesDisponiveis"
+                        placeholder="Digite ou selecione o cliente"
+                        required
+                    >
+                    <datalist id="clientesDisponiveis"></datalist>
+                </div>
+
+                <div class="campo">
+                    <label for="data">Data do orçamento *</label>
+                    <input type="date" id="data" name="data" required>
+                </div>
+
+                <div class="campo">
+                    <label for="validade">Validade até *</label>
+                    <input type="date" id="validade" name="validade" required>
+                </div>
+
+                <div class="campo campo-completo">
+                    <label for="observacoes">Observações</label>
+                    <textarea
+                        id="observacoes"
+                        name="observacoes"
+                        rows="3"
+                        placeholder="Informações adicionais sobre o orçamento"
+                    ></textarea>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="secao">
+
+            <div class="secao-cabecalho">
+                <div>
+                    <h2>Produtos do orçamento</h2>
+                    <p>Adicione os produtos, as quantidades e os preços.</p>
+                </div>
+
+                <button
+                    type="button"
+                    class="botao botao-principal"
+                    id="adicionarProduto"
+                >
+                    <i data-lucide="plus"></i>
+                    Adicionar produto
+                </button>
+            </div>
+
+            <div id="itensProdutos"></div>
+
+            <div class="totais">
+                <div class="total-linha">
+                    <span>Quantidade de itens</span>
+                    <strong id="quantidadeItens">0</strong>
+                </div>
+
+                <div class="total-linha">
+                    <span>Subtotal</span>
+                    <strong id="subtotal">R$ 0,00</strong>
+                </div>
+
+                <div class="total-linha total-final">
+                    <span>Total do orçamento</span>
+                    <strong id="total">R$ 0,00</strong>
+                </div>
+            </div>
+
+            <div class="acoes-final">
+                <a href="orcamentos.html" class="botao botao-secundario">
+                    <i data-lucide="x"></i>
+                    Cancelar
+                </a>
+
+                <button type="submit" class="botao botao-principal">
+                    <i data-lucide="save"></i>
+                    Salvar orçamento
+                </button>
+            </div>
+
+        </section>
+
+    </form>
+
+    <footer class="rodape">
+        <span>AutoPeças Gestão</span>
+        <span>Cadastro de orçamento</span>
+    </footer>
+
+</main>
+
+<script>
+(() => {
+    const CHAVE_ORCAMENTOS = "autopecas_orcamentos";
+
+    const form = document.getElementById("formOrcamento");
+    const listaItens = document.getElementById("itensProdutos");
+    const mensagem = document.getElementById("mensagem");
+
+    const parametros = new URLSearchParams(window.location.search);
+    const idEdicao = parametros.get("id");
+
+    let contadorItem = 0;
+
+    function lerLista(chaves) {
+        for (const chave of chaves) {
+            try {
+                const valor = JSON.parse(localStorage.getItem(chave));
+
+                if (Array.isArray(valor) && valor.length) {
+                    return valor;
+                }
+            } catch (_) {}
+        }
+
+        return [];
+    }
+
+    function salvarLista(lista) {
+        localStorage.setItem(
+            CHAVE_ORCAMENTOS,
+            JSON.stringify(lista)
+        );
+    }
+
+    function moeda(valor) {
+        return Number(valor || 0).toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL"
+        });
+    }
+
+    function hojeISO() {
+        const agora = new Date();
+
+        const local = new Date(
+            agora.getTime() - agora.getTimezoneOffset() * 60000
+        );
+
+        return local.toISOString().slice(0, 10);
+    }
+
+    function exibirMensagem(texto, erro = false) {
+        mensagem.textContent = texto;
+        mensagem.classList.toggle("erro", erro);
+        mensagem.style.display = "block";
+
+        mensagem.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest"
+        });
+    }
+
+    function escapar(texto) {
+        return String(texto ?? "").replace(/[&<>"']/g, c => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[c]);
+    }
+
+    const clientes = lerLista([
+        "autopecas_clientes",
+        "clientes",
+        "listaClientes"
+    ]);
+
+    const produtos = lerLista([
+        "autopecas_produtos",
+        "produtos",
+        "listaProdutos"
+    ]);
+
+    const nomesClientes = clientes.map(c =>
+        typeof c === "string"
+            ? c
+            : (
+                c.nome ||
+                c.cliente ||
+                c.razaoSocial ||
+                c.name ||
+                ""
+            )
+    ).filter(Boolean);
+
+    document.getElementById("clientesDisponiveis").innerHTML =
+        [...new Set(nomesClientes)].map(nome =>
+            `<option value="${escapar(nome)}"></option>`
+        ).join("");
+
+    function normalizarProduto(p, indice) {
+        const nome = typeof p === "string"
+            ? p
+            : (
+                p.nome ||
+                p.produto ||
+                p.descricao ||
+                p.nomeProduto ||
+                p.name ||
+                `Produto ${indice + 1}`
+            );
+
+        const preco = typeof p === "object"
+            ? Number(
+                p.preco ??
+                p.valor ??
+                p.precoVenda ??
+                p.valorUnitario ??
+                p.price ??
+                0
+            )
+            : 0;
+
+        return { nome, preco };
+    }
+
+    const produtosDisponiveis = produtos.map(normalizarProduto);
+
+    function adicionarLinha(dados = {}) {
+        contadorItem++;
+
+        const id = contadorItem;
+        const linha = document.createElement("div");
+
+        linha.className = "linha-produto";
+        linha.dataset.itemId = id;
+
+        linha.innerHTML = `
+            <div class="campo">
+                <label for="produto-${id}">Produto *</label>
+
+                <input
+                    id="produto-${id}"
+                    class="nome-produto"
+                    list="produtos-${id}"
+                    placeholder="Nome do produto"
+                    value="${escapar(dados.produto || "")}"
+                    required
+                >
+
+                <datalist id="produtos-${id}">
+                    ${produtosDisponiveis.map(p =>
+                        `<option value="${escapar(p.nome)}"></option>`
+                    ).join("")}
+                </datalist>
+            </div>
+
+            <div class="campo">
+                <label for="quantidade-${id}">Quantidade *</label>
+
+                <input
+                    id="quantidade-${id}"
+                    class="quantidade"
+                    type="number"
+                    min="1"
+                    step="1"
+                    value="${
+                        Number(dados.quantidade) > 0
+                            ? Number(dados.quantidade)
+                            : 1
+                    }"
+                    required
+                >
+            </div>
+
+            <div class="campo">
+                <label for="preco-${id}">Preço unitário (R$) *</label>
+
+                <input
+                    id="preco-${id}"
+                    class="preco"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value="${Number(dados.preco ?? 0).toFixed(2)}"
+                    required
+                >
+            </div>
+
+            <div class="campo">
+                <label>Subtotal</label>
+
+                <input
+                    class="subtotal-item"
+                    value="${moeda(0)}"
+                    readonly
+                >
+            </div>
+
+            <button
+                type="button"
+                class="remover-item"
+                title="Remover produto"
+                aria-label="Remover produto"
+            >
+                <i data-lucide="trash-2"></i>
+            </button>
+        `;
+
+        listaItens.appendChild(linha);
+
+        lucide.createIcons({
+            root: linha
+        });
+
+        const nomeInput = linha.querySelector(".nome-produto");
+
+        nomeInput.addEventListener("change", () => {
+            const produto = produtosDisponiveis.find(p =>
+                p.nome.toLowerCase() ===
+                nomeInput.value.trim().toLowerCase()
+            );
+
+            if (produto && !linha.dataset.precoAlterado) {
+                linha.querySelector(".preco").value =
+                    Number(produto.preco || 0).toFixed(2);
+            }
+
+            calcularTotais();
+        });
+
+        linha.querySelector(".preco").addEventListener("input", () => {
+            linha.dataset.precoAlterado = "1";
+            calcularTotais();
+        });
+
+        linha.querySelector(".quantidade").addEventListener(
+            "input",
+            calcularTotais
+        );
+
+        linha.querySelector(".remover-item").addEventListener(
+            "click",
+            () => {
+                linha.remove();
+                calcularTotais();
+            }
+        );
+
+        calcularTotais();
+    }
+
+    function calcularTotais() {
+        let quantidadeItens = 0;
+        let subtotal = 0;
+
+        listaItens.querySelectorAll(".linha-produto").forEach(linha => {
+            const quantidade = Math.max(
+                0,
+                Number(linha.querySelector(".quantidade").value) || 0
+            );
+
+            const preco = Math.max(
+                0,
+                Number(linha.querySelector(".preco").value) || 0
+            );
+
+            const totalItem = quantidade * preco;
+
+            linha.querySelector(".subtotal-item").value =
+                moeda(totalItem);
+
+            quantidadeItens += quantidade;
+            subtotal += totalItem;
+        });
+
+        document.getElementById("quantidadeItens").textContent =
+            quantidadeItens;
+
+        document.getElementById("subtotal").textContent =
+            moeda(subtotal);
+
+        document.getElementById("total").textContent =
+            moeda(subtotal);
+
+        return { quantidadeItens, subtotal };
+    }
+
+    document.getElementById("adicionarProduto").addEventListener(
+        "click",
+        () => adicionarLinha()
+    );
+
+    document.getElementById("data").value = hojeISO();
+
+    const validadePadrao = new Date();
+    validadePadrao.setDate(validadePadrao.getDate() + 7);
+
+    const validadeLocal = new Date(
+        validadePadrao.getTime() -
+        validadePadrao.getTimezoneOffset() * 60000
+    );
+
+    document.getElementById("validade").value =
+        validadeLocal.toISOString().slice(0, 10);
+
+    function carregarOrcamentosSeguros() {
+        try {
+            const dados = JSON.parse(
+                localStorage.getItem(CHAVE_ORCAMENTOS)
+            );
+
+            return Array.isArray(dados) ? dados : [];
+        } catch (_) {
+            return [];
+        }
+    }
+
+    let orcamentos = carregarOrcamentosSeguros();
+    let original = null;
+
+    if (idEdicao) {
+        original = orcamentos.find(
+            o => String(o.id) === String(idEdicao)
+        );
+
+        if (original) {
+            document.getElementById("tituloPagina").textContent =
+                "Editar orçamento";
+
+            document.getElementById("numero").value =
+                original.numero || "";
+
+            document.getElementById("cliente").value =
+                original.cliente || "";
+
+            document.getElementById("data").value =
+                original.data || hojeISO();
+
+            document.getElementById("validade").value =
+                original.validade || "";
+
+            document.getElementById("observacoes").value =
+                original.observacoes || "";
+
+            (original.itens || []).forEach(adicionarLinha);
+        } else {
+            exibirMensagem(
+                "O orçamento solicitado não foi encontrado. Você pode criar um novo.",
+                true
+            );
+        }
+    }
+
+    if (!original) {
+        const maiorNumero = orcamentos.reduce((maior, o) => {
+            const n = Number(
+                String(o.numero || "").replace(/\D/g, "")
+            );
+
+            return Math.max(maior, n || 0);
+        }, 0);
+
+        document.getElementById("numero").value =
+            `ORC-${String(maiorNumero + 1).padStart(4, "0")}`;
+    }
+
+    if (!listaItens.children.length) {
+        adicionarLinha();
+    }
+
+    form.addEventListener("submit", event => {
+        event.preventDefault();
+
+        const cliente = document.getElementById("cliente").value.trim();
+        const data = document.getElementById("data").value;
+        const validade = document.getElementById("validade").value;
+
+        const linhas = [
+            ...listaItens.querySelectorAll(".linha-produto")
+        ];
+
+        if (!cliente) {
+            exibirMensagem("Informe o nome do cliente.", true);
+            document.getElementById("cliente").focus();
+            return;
+        }
+
+        if (!linhas.length) {
+            exibirMensagem(
+                "Adicione pelo menos um produto ao orçamento.",
+                true
+            );
+            return;
+        }
+
+        const itens = [];
+
+        for (const linha of linhas) {
+            const produto = linha
+                .querySelector(".nome-produto")
+                .value.trim();
+
+            const quantidade = Number(
+                linha.querySelector(".quantidade").value
+            );
+
+            const preco = Number(
+                linha.querySelector(".preco").value
+            );
+
+            if (
+                !produto ||
+                !Number.isFinite(quantidade) ||
+                quantidade < 1 ||
+                !Number.isInteger(quantidade) ||
+                !Number.isFinite(preco) ||
+                preco < 0
+            ) {
+                exibirMensagem(
+                    "Confira os produtos, as quantidades e os preços informados.",
+                    true
+                );
+                return;
+            }
+
+            itens.push({
+                produto,
+                quantidade,
+                preco,
+                subtotal: quantidade * preco
+            });
+        }
+
+        if (!data || !validade) {
+            exibirMensagem(
+                "Informe a data e a validade do orçamento.",
+                true
+            );
+            return;
+        }
+
+        if (validade < data) {
+            exibirMensagem(
+                "A validade do orçamento não pode ser anterior à data do orçamento.",
+                true
+            );
+            return;
+        }
+
+        const total = itens.reduce(
+            (soma, item) => soma + item.subtotal,
+            0
+        );
+
+        const orcamento = {
+            id: original
+                ? original.id
+                : (
+                    typeof crypto !== "undefined" &&
+                    typeof crypto.randomUUID === "function"
+                        ? crypto.randomUUID()
+                        : String(Date.now())
+                ),
+
+            numero: document.getElementById("numero").value,
+            cliente,
+            data,
+            validade,
+
+            observacoes: document.getElementById("observacoes")
+                .value.trim(),
+
+            itens,
+            total,
+
+            status: original
+                ? (original.status || "Pendente")
+                : "Pendente"
+        };
+
+        try {
+            const atuais = carregarOrcamentosSeguros();
+
+            const index = atuais.findIndex(
+                o => String(o.id) === String(orcamento.id)
+            );
+
+            if (index >= 0) {
+                atuais[index] = orcamento;
+            } else {
+                atuais.push(orcamento);
+            }
+
+            salvarLista(atuais);
+
+            window.location.href = "orcamentos.html";
+
+        } catch (_) {
+            exibirMensagem(
+                "Não foi possível salvar. Verifique se o armazenamento local do navegador está habilitado.",
+                true
+            );
+        }
+    });
+
+    lucide.createIcons();
+})();
+</script>
+
+</body>
+</html>
+```

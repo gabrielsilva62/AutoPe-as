@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos | AutoPeças</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu a i {
+            width: 19px;
+            height: 19px;
+            color: #f28c28;
+            flex-shrink: 0;
+        }
+
+        .painel-icone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .painel-icone i {
+            width: 54px;
+            height: 54px;
+            color: #f28c28;
+            stroke-width: 1.6;
+        }
+
+        .icone-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icone-card i {
+            width: 23px;
+            height: 23px;
+            stroke-width: 1.8;
+        }
+
+        .icone-card.azul i {
+            color: #3b82f6;
+        }
+
+        .icone-card.roxo i {
+            color: #8b5cf6;
+        }
+
+        .icone-card.laranja i {
+            color: #f28c28;
+        }
+
+        .icone-card.verde i {
+            color: #22c55e;
+        }
+
+        .botao i {
+            width: 17px;
+            height: 17px;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        .acoes-produto {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .botao-excluir-produto {
+            background-color: #dc2626;
+            color: #ffffff;
+            border: 1px solid #dc2626;
+        }
+
+        .botao-excluir-produto:hover {
+            background-color: #b91c1c;
+            border-color: #b91c1c;
+        }
+
+        .botao-excluir-produto i {
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">A</div>
+            <div>
+                <h2>Auto<span>Peças</span></h2>
+                <small>Sistema de Gestão</small>
+            </div>
+        </div>
+
+        <p class="menu-titulo">MENU PRINCIPAL</p>
+
+        <nav class="menu">
+            <a href="index.html">
+                <i data-lucide="layout-dashboard"></i>
+                Dashboard
+            </a>
+
+            <a href="clientes.html">
+                <i data-lucide="users-round"></i>
+                Clientes
+            </a>
+
+            <a href="veiculos.html">
+                <i data-lucide="car-front"></i>
+                Veículos
+            </a>
+
+            <a href="produtos.html" class="ativo">
+                <i data-lucide="package"></i>
+                Produtos
+            </a>
+
+            <a href="estoque.html">
+                <i data-lucide="boxes"></i>
+                Estoque
+            </a>
+
+            <a href="orcamentos.html">
+                <i data-lucide="file-text"></i>
+                Orçamentos
+            </a>
+
+            <a href="relatorios.html">
+                <i data-lucide="chart-no-axes-column"></i>
+                Relatórios
+            </a>
+        </nav>
+
+        <div class="sidebar-rodape">
+            <span class="status-bolinha"></span>
+            <span>Sistema operacional</span>
+        </div>
+    </aside>
+
+    <main class="conteudo">
+
+        <section class="painel-controle">
+            <div class="painel-texto">
+                <span class="painel-etiqueta">PAINEL DE CONTROLE</span>
+
+                <h2>Visão geral dos produtos</h2>
+
+                <p>
+                    Acompanhe os produtos, preços e disponibilidade das peças
+                    em um só lugar.
+                </p>
+            </div>
+        </section>
+
+        <section class="indicadores">
+
+            <article class="card-indicador">
+                <div class="indicador-topo">
+                    <span>Total de produtos</span>
+                    <span class="icone-card azul">
+                        <i data-lucide="package"></i>
+                    </span>
+                </div>
+                <h3 id="total-produtos">3</h3>
+                <p class="texto-secundario">Produtos cadastrados</p>
+            </article>
+
+            <article class="card-indicador">
+                <div class="indicador-topo">
+                    <span>Estoque disponível</span>
+                    <span class="icone-card roxo">
+                        <i data-lucide="boxes"></i>
+                    </span>
+                </div>
+                <h3 id="total-unidades">145</h3>
+                <p class="texto-secundario">Unidades em estoque</p>
+            </article>
+
+            <article class="card-indicador">
+                <div class="indicador-topo">
+                    <span>Estoque baixo</span>
+                    <span class="icone-card laranja">
+                        <i data-lucide="triangle-alert"></i>
+                    </span>
+                </div>
+                <h3 id="total-baixo">1</h3>
+                <p class="texto-secundario">Produtos para repor</p>
+            </article>
+
+            <article class="card-indicador">
+                <div class="indicador-topo">
+                    <span>Categorias</span>
+                    <span class="icone-card verde">
+                        <i data-lucide="tags"></i>
+                    </span>
+                </div>
+                <h3 id="total-categorias">3</h3>
+                <p class="texto-secundario">Categorias diferentes</p>
+            </article>
+
+        </section>
+
+        <section class="secao" id="formulario-produto">
+
+            <div class="secao-cabecalho">
+                <div>
+                    <h2 id="titulo-formulario">Cadastrar produto</h2>
+                    <p>Informe os dados da peça automotiva.</p>
+                </div>
+            </div>
+
+            <form id="form-produto" action="#" method="post">
+                <input type="hidden" id="produto-editando">
+
+                <div class="form-grid">
+
+                    <div class="campo">
+                        <label for="codigo">Código do produto *</label>
+                        <input type="text" id="codigo"
+                            placeholder="Ex.: PEC001" maxlength="20" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="nome-produto">Nome do produto *</label>
+                        <input type="text" id="nome-produto"
+                            placeholder="Ex.: Filtro de óleo" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="categoria">Categoria *</label>
+                        <select id="categoria" required>
+                            <option value="">Selecione</option>
+                            <option value="Motor">Motor</option>
+                            <option value="Freios">Freios</option>
+                            <option value="Suspensão">Suspensão</option>
+                            <option value="Filtros">Filtros</option>
+                            <option value="Elétrica">Elétrica</option>
+                            <option value="Transmissão">Transmissão</option>
+                            <option value="Acessórios">Acessórios</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="marca-produto">Marca *</label>
+                        <input type="text" id="marca-produto"
+                            placeholder="Ex.: Bosch" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="preco-custo">Preço de custo (R$) *</label>
+                        <input type="number" id="preco-custo"
+                            min="0" step="0.01" placeholder="0,00" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="preco-venda">Preço de venda (R$) *</label>
+                        <input type="number" id="preco-venda"
+                            min="0" step="0.01" placeholder="0,00" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="quantidade">Quantidade em estoque *</label>
+                        <input type="number" id="quantidade"
+                            min="0" step="1" placeholder="0" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="estoque-minimo">Estoque mínimo *</label>
+                        <input type="number" id="estoque-minimo"
+                            min="0" step="1" placeholder="Ex.: 5" required>
+                    </div>
+
+                    <div class="campo campo-completo">
+                        <label for="descricao">Descrição</label>
+                        <textarea id="descricao" rows="3"
+                            placeholder="Detalhes, aplicação e compatibilidade da peça..."></textarea>
+                    </div>
+
+                </div>
+
+                <div class="form-acoes">
+                    <button type="button" id="limpar-form-produto"
+                        class="botao botao-secundario">
+                        <i data-lucide="eraser"></i>
+                        Limpar formulário
+                    </button>
+
+                    <button type="submit" id="salvar-produto"
+                        class="botao botao-principal">
+                        <i data-lucide="plus"></i>
+                        Cadastrar produto
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section class="secao">
+
+            <div class="secao-cabecalho">
+                <div>
+                    <h2>Produtos cadastrados</h2>
+                    <p>Consulte, edite ou exclua os produtos da loja.</p>
+                </div>
+            </div>
+
+            <div class="filtros">
+                <div class="campo busca">
+                    <label for="buscar-produto">Buscar produto</label>
+                    <input type="search" id="buscar-produto"
+                        placeholder="Código, nome, marca ou categoria...">
+                </div>
+
+                <button type="button" id="botao-buscar-produto"
+                    class="botao botao-principal">
+                    <i data-lucide="search"></i>
+                    Buscar
+                </button>
+
+                <button type="button" id="limpar-busca-produto"
+                    class="botao botao-secundario">
+                    <i data-lucide="x"></i>
+                    Limpar
+                </button>
+            </div>
+
+            <p id="resultado-busca-produto"
+                class="resultado-busca" aria-live="polite"></p>
+
+            <div class="tabela-container">
+                <table id="tabela-produtos">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Produto</th>
+                            <th>Categoria</th>
+                            <th>Marca</th>
+                            <th>Preço de venda</th>
+                            <th>Estoque</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr
+                            data-codigo="PEC001"
+                            data-nome-produto="Filtro de óleo"
+                            data-categoria="Filtros"
+                            data-marca-produto="Bosch"
+                            data-preco-custo="18.00"
+                            data-preco-venda="32.90"
+                            data-quantidade="25"
+                            data-estoque-minimo="5"
+                            data-descricao="Filtro de óleo automotivo">
+
+                            <td>PEC001</td>
+                            <td>Filtro de óleo</td>
+                            <td>Filtros</td>
+                            <td>Bosch</td>
+                            <td>R$ 32,90</td>
+                            <td>25</td>
+                            <td>
+                                <span class="status-produto status-ok">
+                                    Disponível
+                                </span>
+                            </td>
+                            <td>
+                                <div class="acoes-produto">
+                                    <button type="button"
+                                        class="botao botao-principal botao-editar-produto">
+                                        <i data-lucide="pencil"></i>
+                                        Editar
+                                    </button>
+
+                                    <button type="button"
+                                        class="botao botao-excluir-produto">
+                                        <i data-lucide="trash-2"></i>
+                                        Excluir
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr
+                            data-codigo="PEC002"
+                            data-nome-produto="Pastilha de freio"
+                            data-categoria="Freios"
+                            data-marca-produto="Cobreq"
+                            data-preco-custo="45.00"
+                            data-preco-venda="79.90"
+                            data-quantidade="3"
+                            data-estoque-minimo="5"
+                            data-descricao="Jogo de pastilhas de freio">
+
+                            <td>PEC002</td>
+                            <td>Pastilha de freio</td>
+                            <td>Freios</td>
+                            <td>Cobreq</td>
+                            <td>R$ 79,90</td>
+                            <td>3</td>
+                            <td>
+                                <span class="status-produto status-baixo">
+                                    Estoque baixo
+                                </span>
+                            </td>
+                            <td>
+                                <div class="acoes-produto">
+                                    <button type="button"
+                                        class="botao botao-principal botao-editar-produto">
+                                        <i data-lucide="pencil"></i>
+                                        Editar
+                                    </button>
+
+                                    <button type="button"
+                                        class="botao botao-excluir-produto">
+                                        <i data-lucide="trash-2"></i>
+                                        Excluir
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr
+                            data-codigo="PEC003"
+                            data-nome-produto="Vela de ignição"
+                            data-categoria="Motor"
+                            data-marca-produto="NGK"
+                            data-preco-custo="12.00"
+                            data-preco-venda="22.50"
+                            data-quantidade="117"
+                            data-estoque-minimo="10"
+                            data-descricao="Vela de ignição automotiva">
+
+                            <td>PEC003</td>
+                            <td>Vela de ignição</td>
+                            <td>Motor</td>
+                            <td>NGK</td>
+                            <td>R$ 22,50</td>
+                            <td>117</td>
+                            <td>
+                                <span class="status-produto status-ok">
+                                    Disponível
+                                </span>
+                            </td>
+                            <td>
+                                <div class="acoes-produto">
+                                    <button type="button"
+                                        class="botao botao-principal botao-editar-produto">
+                                        <i data-lucide="pencil"></i>
+                                        Editar
+                                    </button>
+
+                                    <button type="button"
+                                        class="botao botao-excluir-produto">
+                                        <i data-lucide="trash-2"></i>
+                                        Excluir
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="rodape">
+            <p>Sistema AutoPeças — Gestão de produtos</p>
+        </footer>
+
+    </main>
+
+```html
+<script>
+    const CHAVE_PRODUTOS = "autopecas_estoque";
+
+    const formularioProduto = document.getElementById("form-produto");
+    const produtoEditando = document.getElementById("produto-editando");
+    const botaoSalvarProduto = document.getElementById("salvar-produto");
+    const corpoTabelaProdutos =
+        document.querySelector("#tabela-produtos tbody");
+
+    const campoBuscaProduto = document.getElementById("buscar-produto");
+    const resultadoBuscaProduto =
+        document.getElementById("resultado-busca-produto");
+
+    const camposProduto = {
+        codigo: document.getElementById("codigo"),
+        nomeProduto: document.getElementById("nome-produto"),
+        categoria: document.getElementById("categoria"),
+        marcaProduto: document.getElementById("marca-produto"),
+        precoCusto: document.getElementById("preco-custo"),
+        precoVenda: document.getElementById("preco-venda"),
+        quantidade: document.getElementById("quantidade"),
+        estoqueMinimo: document.getElementById("estoque-minimo"),
+        descricao: document.getElementById("descricao")
+    };
+
+    let produtos = [];
+
+
+    function normalizarProduto(p) {
+        return {
+            codigo: String(p.codigo ?? "").trim(),
+            nome: String(p.nome ?? p.nomeProduto ?? "").trim(),
+            categoria: String(p.categoria ?? "Outros").trim(),
+            marca: String(p.marca ?? p.marcaProduto ?? "").trim(),
+            custo: Number(p.custo ?? p.precoCusto ?? 0),
+            precoVenda: Number(p.precoVenda ?? 0),
+            quantidade: Number(p.quantidade ?? 0),
+            minimo: Number(p.minimo ?? p.estoqueMinimo ?? 0),
+            descricao: String(p.descricao ?? "")
+        };
+    }
+
+    function escaparHTML(valor) {
+        return String(valor ?? "").replace(/[&<>"']/g, caractere => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        })[caractere]);
+    }
+
+    function formatarMoeda(valor) {
+        return Number(valor || 0).toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL"
+        });
+    }
+
+
+    function carregarProdutos() {
+        const dadosSalvos = localStorage.getItem(CHAVE_PRODUTOS);
+
+        if (dadosSalvos !== null) {
+            try {
+                const dados = JSON.parse(dadosSalvos);
+
+                produtos = Array.isArray(dados)
+                    ? dados.map(normalizarProduto)
+                    : [];
+
+                renderizarProdutos();
+                return;
+            } catch (erro) {
+                console.error("Erro ao ler os produtos salvos:", erro);
+                alert("Não foi possível ler os produtos salvos.");
+                return;
+            }
+        }
+
+  
+        produtos = Array.from(corpoTabelaProdutos.rows).map(linha => {
+            const ler = campo => linha.dataset[campo] ?? "";
+
+            return normalizarProduto({
+                codigo: ler("codigo"),
+                nome: ler("nomeProduto"),
+                categoria: ler("categoria"),
+                marca: ler("marcaProduto"),
+                custo: ler("precoCusto"),
+                precoVenda: ler("precoVenda"),
+                quantidade: ler("quantidade"),
+                minimo: ler("estoqueMinimo"),
+                descricao: ler("descricao")
+            });
+        }).filter(p => p.codigo);
+
+        salvarProdutos(false);
+        renderizarProdutos();
+    }
+
+
+    function salvarProdutos() {
+        try {
+            localStorage.setItem(CHAVE_PRODUTOS, JSON.stringify(produtos));
+            return true;
+        } catch (erro) {
+            console.error("Erro ao salvar os produtos:", erro);
+            alert("Não foi possível salvar as alterações no navegador.");
+            return false;
+        }
+    }
+
+    function obterStatus(produto) {
+        if (produto.quantidade === 0) {
+            return { texto: "Esgotado", classe: "status-esgotado" };
+        }
+
+        if (produto.quantidade <= produto.minimo) {
+            return { texto: "Estoque baixo", classe: "status-baixo" };
+        }
+
+        return { texto: "Disponível", classe: "status-ok" };
+    }
+
+
+    function atualizarIndicadoresProdutos() {
+        document.getElementById("total-produtos").textContent =
+            produtos.length;
+
+        document.getElementById("total-unidades").textContent =
+            produtos.reduce((total, p) => total + p.quantidade, 0);
+
+        document.getElementById("total-baixo").textContent =
+            produtos.filter(p => p.quantidade <= p.minimo).length;
+
+        document.getElementById("total-categorias").textContent =
+            new Set(produtos.map(p => p.categoria).filter(Boolean)).size;
+    }
+
+
+    function renderizarProdutos() {
+        const termo = campoBuscaProduto.value.trim().toLocaleLowerCase("pt-BR");
+
+        const filtrados = produtos.filter(p => {
+            const texto = [
+                p.codigo, p.nome, p.categoria, p.marca
+            ].join(" ").toLocaleLowerCase("pt-BR");
+
+            return texto.includes(termo);
+        });
+
+        corpoTabelaProdutos.innerHTML = "";
+
+        if (filtrados.length === 0) {
+            const linha = document.createElement("tr");
+            const celula = document.createElement("td");
+
+            celula.colSpan = 8;
+            celula.textContent = "Nenhum produto encontrado.";
+            celula.style.textAlign = "center";
+            celula.style.padding = "25px";
+
+            linha.appendChild(celula);
+            corpoTabelaProdutos.appendChild(linha);
+        }
+
+        filtrados.forEach(p => {
+            const status = obterStatus(p);
+            const linha = document.createElement("tr");
+
+            linha.dataset.codigo = p.codigo;
+
+            linha.innerHTML = `
+                <td>${escaparHTML(p.codigo)}</td>
+                <td>${escaparHTML(p.nome)}</td>
+                <td>${escaparHTML(p.categoria)}</td>
+                <td>${escaparHTML(p.marca)}</td>
+                <td>${formatarMoeda(p.precoVenda)}</td>
+                <td>${p.quantidade}</td>
+                <td>
+                    <span class="status-produto ${status.classe}">
+                        ${status.texto}
+                    </span>
+                </td>
+                <td>
+                    <div class="acoes-produto">
+                        <button type="button"
+                            class="botao botao-principal botao-editar-produto"
+                            data-codigo="${escaparHTML(p.codigo)}">
+                            <i data-lucide="pencil"></i>
+                            Editar
+                        </button>
+
+                        <button type="button"
+                            class="botao botao-excluir-produto"
+                            data-codigo="${escaparHTML(p.codigo)}">
+                            <i data-lucide="trash-2"></i>
+                            Excluir
+                        </button>
+                    </div>
+                </td>
+            `;
+
+            corpoTabelaProdutos.appendChild(linha);
+        });
+
+        resultadoBuscaProduto.textContent =
+            `Exibindo ${filtrados.length} de ${produtos.length} produto(s).`;
+
+        atualizarIndicadoresProdutos();
+
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    }
+
+    function limparFormularioProduto() {
+        formularioProduto.reset();
+        produtoEditando.value = "";
+
+        document.getElementById("titulo-formulario").textContent =
+            "Cadastrar produto";
+
+        botaoSalvarProduto.innerHTML =
+            '<i data-lucide="plus"></i> Cadastrar produto';
+
+        if (window.lucide) lucide.createIcons();
+    }
+
+    function preencherFormulario(produto) {
+        produtoEditando.value = produto.codigo;
+
+        camposProduto.codigo.value = produto.codigo;
+        camposProduto.nomeProduto.value = produto.nome;
+        camposProduto.categoria.value = produto.categoria;
+        camposProduto.marcaProduto.value = produto.marca;
+        camposProduto.precoCusto.value = produto.custo;
+        camposProduto.precoVenda.value = produto.precoVenda;
+        camposProduto.quantidade.value = produto.quantidade;
+        camposProduto.estoqueMinimo.value = produto.minimo;
+        camposProduto.descricao.value = produto.descricao;
+
+        document.getElementById("titulo-formulario").textContent =
+            "Editar produto";
+
+        botaoSalvarProduto.innerHTML =
+            '<i data-lucide="save"></i> Salvar alterações';
+
+        if (window.lucide) lucide.createIcons();
+
+        document.getElementById("formulario-produto").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+
+
+    formularioProduto.addEventListener("submit", function(evento) {
+        evento.preventDefault();
+
+        const produto = normalizarProduto({
+            codigo: camposProduto.codigo.value.toUpperCase(),
+            nome: camposProduto.nomeProduto.value,
+            categoria: camposProduto.categoria.value,
+            marca: camposProduto.marcaProduto.value,
+            custo: camposProduto.precoCusto.value,
+            precoVenda: camposProduto.precoVenda.value,
+            quantidade: camposProduto.quantidade.value,
+            minimo: camposProduto.estoqueMinimo.value,
+            descricao: camposProduto.descricao.value
+        });
+
+        if (
+            !produto.codigo || !produto.nome ||
+            !produto.categoria || !produto.marca
+        ) {
+            alert("Preencha todos os campos obrigatórios.");
+            return;
+        }
+
+        if (
+            produto.custo < 0 || produto.precoVenda < 0 ||
+            produto.quantidade < 0 || produto.minimo < 0 ||
+            !Number.isInteger(produto.quantidade) ||
+            !Number.isInteger(produto.minimo)
+        ) {
+            alert("Confira os preços e as quantidades informadas.");
+            return;
+        }
+
+        if (produto.precoVenda < produto.custo) {
+            if (!confirm("O preço de venda é menor que o custo. Deseja continuar?")) {
+                return;
+            }
+        }
+
+        const codigoAntigo = produtoEditando.value;
+
+        const duplicado = produtos.some(p =>
+            p.codigo.toUpperCase() === produto.codigo.toUpperCase() &&
+            p.codigo !== codigoAntigo
+        );
+
+        if (duplicado) {
+            alert("Já existe um produto cadastrado com esse código.");
+            return;
+        }
+
+        const indice = produtos.findIndex(p => p.codigo === codigoAntigo);
+
+        if (indice >= 0) {
+            produtos[indice] = produto;
+        } else {
+            produtos.push(produto);
+        }
+
+        if (!salvarProdutos()) {
+            carregarProdutos();
+            return;
+        }
+
+        limparFormularioProduto();
+        renderizarProdutos();
+
+        alert(indice >= 0
+            ? "Produto atualizado com sucesso!"
+            : "Produto cadastrado com sucesso!");
+    });
+
+
+    corpoTabelaProdutos.addEventListener("click", function(evento) {
+        const botaoEditar = evento.target.closest(".botao-editar-produto");
+        const botaoExcluir = evento.target.closest(".botao-excluir-produto");
+
+        if (!botaoEditar && !botaoExcluir) return;
+
+        const botao = botaoEditar || botaoExcluir;
+        const codigo = botao.dataset.codigo;
+
+        const indice = produtos.findIndex(p => p.codigo === codigo);
+
+        if (indice < 0) {
+            carregarProdutos();
+            alert("O produto não foi encontrado. A lista foi atualizada.");
+            return;
+        }
+
+        if (botaoEditar) {
+            preencherFormulario(produtos[indice]);
+            return;
+        }
+
+        const produto = produtos[indice];
+
+        if (!confirm(
+            `Deseja realmente excluir "${produto.nome}" (${produto.codigo})?`
+        )) {
+            return;
+        }
+
+        const produtosAnteriores = [...produtos];
+
+        produtos.splice(indice, 1);
+
+        if (!salvarProdutos()) {
+            produtos = produtosAnteriores;
+            renderizarProdutos();
+            return;
+        }
+
+        if (produtoEditando.value === codigo) {
+            limparFormularioProduto();
+        }
+
+        renderizarProdutos();
+        alert("Produto excluído e alteração salva com sucesso!");
+    });
+
+    document.getElementById("limpar-form-produto")
+        .addEventListener("click", limparFormularioProduto);
+
+    document.getElementById("botao-buscar-produto")
+        .addEventListener("click", renderizarProdutos);
+
+    campoBuscaProduto.addEventListener("input", renderizarProdutos);
+
+    document.getElementById("limpar-busca-produto")
+        .addEventListener("click", function() {
+            campoBuscaProduto.value = "";
+            renderizarProdutos();
+            campoBuscaProduto.focus();
+        });
+
+  
+    window.addEventListener("storage", function(evento) {
+        if (evento.key === CHAVE_PRODUTOS || evento.key === null) {
+            const codigoEmEdicao = produtoEditando.value;
+
+            carregarProdutos();
+
+
+            if (
+                codigoEmEdicao &&
+                !produtos.some(p => p.codigo === codigoEmEdicao)
+            ) {
+                limparFormularioProduto();
+            }
+        }
+    });
+
+
+    carregarProdutos();
+</script>

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estoque | AutoPeças</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu a i {
+            width: 19px;
+            height: 19px;
+            color: #f28c28;
+            flex-shrink: 0;
+        }
+
+        .painel-icone,
+        .icone-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .painel-icone i {
+            width: 42px;
+            height: 42px;
+            stroke-width: 1.7;
+        }
+
+        .icone-card i {
+            width: 23px;
+            height: 23px;
+            stroke-width: 1.8;
+        }
+
+        .botao-com-icone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .botao-com-icone i {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+        #tabela-estoque td,
+        #tabela-alertas td {
+            vertical-align: middle;
+        }
+
+        .status-produto {
+            white-space: nowrap;
+        }
+
+        .mensagem-vazia {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">A</div>
+            <div>
+                <h2>Auto<span>Peças</span></h2>
+                <small>Sistema de Gestão</small>
+            </div>
+        </div>
+
+        <p class="menu-titulo">MENU PRINCIPAL</p>
+
+        <nav class="menu">
+            <a href="index.html">
+                <i data-lucide="layout-dashboard"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="clientes.html">
+                <i data-lucide="users-round"></i>
+                <span>Clientes</span>
+            </a>
+
+            <a href="veiculos.html">
+                <i data-lucide="car-front"></i>
+                <span>Veículos</span>
+            </a>
+
+            <a href="produtos.html">
+                <i data-lucide="package"></i>
+                <span>Produtos</span>
+            </a>
+
+            <a href="estoque.html" class="ativo">
+                <i data-lucide="boxes"></i>
+                <span>Estoque</span>
+            </a>
+
+            <a href="orcamentos.html">
+                <i data-lucide="file-text"></i>
+                <span>Orçamentos</span>
+            </a>
+
+            <a href="relatorios.html">
+                <i data-lucide="chart-no-axes-column"></i>
+                <span>Relatórios</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-rodape">
+            <span class="status-bolinha"></span>
+            <span>Sistema operacional</span>
+        </div>
+    </aside>
+
+    <main class="conteudo">
+
+        <section class="painel-controle">
+            <div class="painel-texto">
+                <span class="painel-etiqueta">CONTROLE DE ESTOQUE</span>
+                <h2>Gestão de estoque</h2>
+                <p>
+                    Acompanhe as quantidades disponíveis, identifique peças
+                    com estoque baixo e monitore as necessidades de reposição.
+                </p>
+            </div>
+        </section>
+
+        <section class="indicadores">
+
+            <article class="card-indicador">
+                <div class="indicador-topo">
+                    <span>Produtos cadastrados</span>
+                    <span class="icone-card azul">
+                        <i data-lucide="package"></i>
+                    </span>
+                </div>
+                <h3 id="total-produtos">0</h3>
+                <p class="texto-secundario">Tipos de peças no estoque</p>
+            </article>
+
+            <article class="card-indicador">
+                <div class="indicador-topo">
+                    <span>Unidades disponíveis</span>
+                    <span class="icone-card roxo">
+                        <i data-lucide="boxes"></i>
+                    </span>
+                </div>
+                <h3 id="total-unidades">0</h3>
+                <p class="texto-secundario">Quantidade total de peças</p>
+            </article>
+
+            <article class="card-indicador">
+                <div class="indicador-topo">
+                    <span>Estoque baixo</span>
+                    <span class="icone-card laranja">
+                        <i data-lucide="triangle-alert"></i>
+                    </span>
+                </div>
+                <h3 id="total-baixo">0</h3>
+                <p class="texto-secundario">Produtos que precisam de atenção</p>
+            </article>
+
+            <article class="card-indicador">
+                <div class="indicador-topo">
+                    <span>Produtos esgotados</span>
+                    <span class="icone-card verde">
+                        <i data-lucide="package-x"></i>
+                    </span>
+                </div>
+                <h3 id="total-esgotados">0</h3>
+                <p class="texto-secundario">Produtos sem unidades disponíveis</p>
+            </article>
+
+        </section>
+
+        <section class="secao">
+            <div class="secao-cabecalho">
+                <div>
+                    <h2>
+                        <i data-lucide="bell-ring"
+                           style="width:20px;height:20px;vertical-align:middle;"></i>
+                        Produtos que precisam de atenção
+                    </h2>
+                    <p>
+                        Peças com quantidade igual ou inferior ao estoque mínimo.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tabela-container">
+                <table id="tabela-alertas">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Produto</th>
+                            <th>Quantidade atual</th>
+                            <th>Estoque mínimo</th>
+                            <th>Situação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpo-alertas"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="secao">
+            <div class="secao-cabecalho">
+                <div>
+                    <h2>
+                        <i data-lucide="clipboard-list"
+                           style="width:20px;height:20px;vertical-align:middle;"></i>
+                        Posição do estoque
+                    </h2>
+                    <p>
+                        Consulte as quantidades e os valores das peças cadastradas.
+                    </p>
+                </div>
+
+                <a href="produtos.html"
+                   class="botao botao-principal botao-com-icone">
+                    <i data-lucide="package-search"></i>
+                    Gerenciar produtos
+                </a>
+            </div>
+
+            <div class="filtros">
+                <div class="campo busca">
+                    <label for="buscar-estoque">Buscar peça</label>
+                    <input
+                        type="search"
+                        id="buscar-estoque"
+                        placeholder="Código, nome, categoria ou marca..."
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="filtro-status">Situação</label>
+                    <select id="filtro-status">
+                        <option value="todos">Todas</option>
+                        <option value="disponivel">Disponível</option>
+                        <option value="baixo">Estoque baixo</option>
+                        <option value="esgotado">Esgotado</option>
+                    </select>
+                </div>
+
+                <button
+                    type="button"
+                    id="limpar-filtros"
+                    class="botao botao-secundario botao-com-icone"
+                >
+                    <i data-lucide="eraser"></i>
+                    Limpar
+                </button>
+            </div>
+
+            <p id="resultado-estoque"
+               class="resultado-busca"
+               aria-live="polite"></p>
+
+            <div class="tabela-container">
+                <table id="tabela-estoque">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Produto</th>
+                            <th>Categoria</th>
+                            <th>Marca</th>
+                            <th>Quantidade</th>
+                            <th>Estoque mínimo</th>
+                            <th>Preço de custo</th>
+                            <th>Valor em estoque</th>
+                            <th>Situação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpo-estoque"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="rodape">
+            <p>Sistema AutoPeças — Controle de estoque</p>
+            <p>Dados salvos no navegador</p>
+        </footer>
+
+    </main>
+
+    <script>
+    
+        const CHAVE_ESTOQUE = "autopecas_estoque";
+
+        const produtosIniciais = [
+            {
+                codigo: "PEC001",
+                nome: "Filtro de óleo",
+                categoria: "Filtros",
+                marca: "Bosch",
+                quantidade: 25,
+                minimo: 5,
+                custo: 18
+            },
+            {
+                codigo: "PEC002",
+                nome: "Pastilha de freio",
+                categoria: "Freios",
+                marca: "Cobreq",
+                quantidade: 3,
+                minimo: 5,
+                custo: 45
+            },
+            {
+                codigo: "PEC003",
+                nome: "Vela de ignição",
+                categoria: "Motor",
+                marca: "NGK",
+                quantidade: 117,
+                minimo: 10,
+                custo: 12
+            }
+        ];
+
+        const corpoEstoque = document.getElementById("corpo-estoque");
+        const corpoAlertas = document.getElementById("corpo-alertas");
+        const campoBusca = document.getElementById("buscar-estoque");
+        const filtroStatus = document.getElementById("filtro-status");
+        const resultadoEstoque = document.getElementById("resultado-estoque");
+
+        let produtosEstoque = carregarEstoque();
+
+        function carregarEstoque() {
+            try {
+                const dadosSalvos = localStorage.getItem(CHAVE_ESTOQUE);
+
+                if (dadosSalvos !== null) {
+                    const dados = JSON.parse(dadosSalvos);
+
+                    if (Array.isArray(dados)) {
+                        return dados
+                            .map(normalizarProduto)
+                            .filter(Boolean);
+                    }
+                }
+
+                localStorage.setItem(
+                    CHAVE_ESTOQUE,
+                    JSON.stringify(produtosIniciais)
+                );
+
+                return produtosIniciais.map(normalizarProduto).filter(Boolean);
+            } catch (erro) {
+                console.error("Não foi possível carregar o estoque:", erro);
+                return produtosIniciais.map(normalizarProduto).filter(Boolean);
+            }
+        }
+
+        function normalizarProduto(produto) {
+            if (!produto || typeof produto !== "object") {
+                return null;
+            }
+
+            const quantidade = Number(produto.quantidade);
+            const minimo = Number(produto.minimo);
+            const custo = Number(produto.custo);
+
+            return {
+                codigo: String(produto.codigo ?? ""),
+                nome: String(produto.nome ?? ""),
+                categoria: String(produto.categoria ?? "Sem categoria"),
+                marca: String(produto.marca ?? "Não informada"),
+                quantidade: Number.isFinite(quantidade)
+                    ? Math.max(0, quantidade)
+                    : 0,
+                minimo: Number.isFinite(minimo)
+                    ? Math.max(0, minimo)
+                    : 0,
+                custo: Number.isFinite(custo)
+                    ? Math.max(0, custo)
+                    : 0
+            };
+        }
+
+        function salvarEstoque() {
+            try {
+                localStorage.setItem(
+                    CHAVE_ESTOQUE,
+                    JSON.stringify(produtosEstoque)
+                );
+                return true;
+            } catch (erro) {
+                console.error("Não foi possível salvar o estoque:", erro);
+                alert("Não foi possível salvar os dados no navegador.");
+                return false;
+            }
+        }
+
+        function obterSituacao(produto) {
+            if (produto.quantidade <= 0) {
+                return "esgotado";
+            }
+
+            if (produto.quantidade <= produto.minimo) {
+                return "baixo";
+            }
+
+            return "disponivel";
+        }
+
+        function textoSituacao(situacao) {
+            const textos = {
+                esgotado: "Esgotado",
+                baixo: "Estoque baixo",
+                disponivel: "Disponível"
+            };
+
+            return textos[situacao] || "Não informado";
+        }
+
+        function criarStatus(produto) {
+            const etiqueta = document.createElement("span");
+            const situacao = obterSituacao(produto);
+
+            etiqueta.className = "status-produto";
+
+            if (situacao === "esgotado") {
+                etiqueta.classList.add("status-esgotado");
+            } else if (situacao === "baixo") {
+                etiqueta.classList.add("status-baixo");
+            } else {
+                etiqueta.classList.add("status-ok");
+            }
+
+            etiqueta.textContent = textoSituacao(situacao);
+            return etiqueta;
+        }
+
+        function formatarMoeda(valor) {
+            return Number(valor).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            });
+        }
+
+        function criarCelula(linha, valor) {
+            const celula = document.createElement("td");
+            celula.textContent = String(valor ?? "");
+            linha.appendChild(celula);
+            return celula;
+        }
+
+        function mostrarMensagem(tabela, mensagem, colunas) {
+            const linha = document.createElement("tr");
+            const celula = criarCelula(linha, mensagem);
+
+            celula.colSpan = colunas;
+            celula.classList.add("mensagem-vazia");
+            tabela.appendChild(linha);
+        }
+
+        function atualizarIndicadores() {
+            const totalUnidades = produtosEstoque.reduce(
+                (total, produto) => total + produto.quantidade,
+                0
+            );
+
+            const estoqueBaixo = produtosEstoque.filter(
+                produto => obterSituacao(produto) === "baixo"
+            ).length;
+
+            const esgotados = produtosEstoque.filter(
+                produto => obterSituacao(produto) === "esgotado"
+            ).length;
+
+            document.getElementById("total-produtos").textContent =
+                produtosEstoque.length;
+
+            document.getElementById("total-unidades").textContent =
+                totalUnidades.toLocaleString("pt-BR");
+
+            document.getElementById("total-baixo").textContent =
+                estoqueBaixo;
+
+            document.getElementById("total-esgotados").textContent =
+                esgotados;
+        }
+
+        function renderizarAlertas() {
+            corpoAlertas.replaceChildren();
+
+            const alertas = produtosEstoque.filter(
+                produto => obterSituacao(produto) !== "disponivel"
+            );
+
+            if (alertas.length === 0) {
+                mostrarMensagem(
+                    corpoAlertas,
+                    "Nenhum produto precisa de atenção.",
+                    5
+                );
+                return;
+            }
+
+            alertas.forEach(produto => {
+                const linha = document.createElement("tr");
+
+                criarCelula(linha, produto.codigo);
+                criarCelula(linha, produto.nome);
+                criarCelula(linha, produto.quantidade);
+                criarCelula(linha, produto.minimo);
+
+                const celulaStatus = document.createElement("td");
+                celulaStatus.appendChild(criarStatus(produto));
+                linha.appendChild(celulaStatus);
+
+                corpoAlertas.appendChild(linha);
+            });
+        }
+
+        function renderizarEstoque() {
+            corpoEstoque.replaceChildren();
+
+            const termo = campoBusca.value
+                .trim()
+                .toLocaleLowerCase("pt-BR");
+
+            const situacaoSelecionada = filtroStatus.value;
+
+            const encontrados = produtosEstoque.filter(produto => {
+                const texto = [
+                    produto.codigo,
+                    produto.nome,
+                    produto.categoria,
+                    produto.marca
+                ].join(" ").toLocaleLowerCase("pt-BR");
+
+                const correspondeTexto = texto.includes(termo);
+
+                const correspondeStatus =
+                    situacaoSelecionada === "todos" ||
+                    obterSituacao(produto) === situacaoSelecionada;
+
+                return correspondeTexto && correspondeStatus;
+            });
+
+            encontrados.forEach(produto => {
+                const linha = document.createElement("tr");
+                const valorEstoque = produto.quantidade * produto.custo;
+
+                criarCelula(linha, produto.codigo);
+                criarCelula(linha, produto.nome);
+                criarCelula(linha, produto.categoria);
+                criarCelula(linha, produto.marca);
+                criarCelula(linha, produto.quantidade);
+                criarCelula(linha, produto.minimo);
+                criarCelula(linha, formatarMoeda(produto.custo));
+                criarCelula(linha, formatarMoeda(valorEstoque));
+
+                const celulaStatus = document.createElement("td");
+                celulaStatus.appendChild(criarStatus(produto));
+                linha.appendChild(celulaStatus);
+
+                corpoEstoque.appendChild(linha);
+            });
+
+            if (encontrados.length === 0) {
+                mostrarMensagem(
+                    corpoEstoque,
+                    "Nenhum produto encontrado com esses filtros.",
+                    9
+                );
+            }
+
+            resultadoEstoque.textContent =
+                "Exibindo " + encontrados.length +
+                (encontrados.length === 1 ? " produto." : " produtos.");
+        }
+
+        function atualizarPagina() {
+            atualizarIndicadores();
+            renderizarAlertas();
+            renderizarEstoque();
+        }
+
+        campoBusca.addEventListener("input", renderizarEstoque);
+        filtroStatus.addEventListener("change", renderizarEstoque);
+
+        document.getElementById("limpar-filtros")
+            .addEventListener("click", function() {
+                campoBusca.value = "";
+                filtroStatus.value = "todos";
+                renderizarEstoque();
+                campoBusca.focus();
+            });
+
+   
+        window.addEventListener("storage", function(evento) {
+            if (evento.key === CHAVE_ESTOQUE) {
+                produtosEstoque = carregarEstoque();
+                atualizarPagina();
+            }
+        });
+
+        atualizarPagina();
+        lucide.createIcons();
+    </script>
+
+</body>
+</html>

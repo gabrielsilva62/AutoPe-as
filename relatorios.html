@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios | AutoPeças</title>
+
+    <link rel="stylesheet" href="css/estilo.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+  
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu a i {
+            width: 19px;
+            height: 19px;
+            color: #f28c28;
+            flex-shrink: 0;
+        }
+
+        .painel-icone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .painel-icone i {
+            width: 42px;
+            height: 42px;
+            stroke-width: 1.7;
+        }
+
+
+        .relatorios-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .relatorios-topo h2 {
+            margin: 0 0 6px;
+            color: #202936;
+        }
+
+        .relatorios-topo p {
+            margin: 0;
+            color: #778397;
+            font-size: 14px;
+        }
+
+        .relatorios-acoes {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .botao-com-icone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .botao-com-icone i {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+
+        .filtros-relatorio {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+            align-items: end;
+        }
+
+        .filtros-relatorio .campo {
+            min-width: 0;
+        }
+
+        .filtros-relatorio input,
+        .filtros-relatorio select {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+
+        .cards-relatorio {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 20px;
+            margin: 24px 0;
+        }
+
+        .card-relatorio {
+            background: #fff;
+            border: 1px solid #e6eaf0;
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 3px 12px rgba(31, 45, 61, .04);
+            min-width: 0;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .card-relatorio:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(31, 45, 61, .08);
+        }
+
+        .card-relatorio .card-titulo {
+            color: #778397;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .card-relatorio .card-valor {
+            color: #202936;
+            font-size: 27px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .card-relatorio .card-descricao {
+            color: #8a95a5;
+            font-size: 12px;
+            margin-top: 9px;
+        }
+
+        .card-icone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+        }
+
+        .card-icone i {
+            width: 22px;
+            height: 22px;
+            stroke-width: 1.8;
+        }
+
+        .icone-laranja {
+            background: #fff0df;
+            color: #e7831c;
+        }
+
+        .icone-azul {
+            background: #e4f1ff;
+            color: #3478c5;
+        }
+
+        .icone-verde {
+            background: #e3f7e9;
+            color: #279653;
+        }
+
+        .icone-roxo {
+            background: #eee8ff;
+            color: #7953c7;
+        }
+
+    
+        .relatorio-grafico {
+            display: grid;
+            grid-template-columns: minmax(0, 1.4fr) minmax(260px, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .grafico-area {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 4px 0;
+    min-height: 0;
+}
+        
+
+        .barra-linha {
+            display: grid;
+            grid-template-columns: 105px minmax(0, 1fr) 100px;
+            gap: 12px;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .barra-label {
+            color: #526176;
+            overflow-wrap: anywhere;
+        }
+
+        .barra-fundo {
+            height: 12px;
+            background: #edf0f4;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .barra-preenchida {
+            height: 100%;
+            width: 0;
+            background: #f28c28;
+            border-radius: 20px;
+            transition: width .3s ease;
+        }
+
+        .barra-valor {
+            text-align: right;
+            color: #202936;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+    
+        .status-resumo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 0;
+            border-bottom: 1px solid #edf0f4;
+        }
+
+        .status-resumo:last-child {
+            border-bottom: 0;
+        }
+
+        .status-nome {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: #526176;
+            font-size: 14px;
+        }
+
+        .status-ponto {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #aab4c2;
+            flex-shrink: 0;
+        }
+
+        .ponto-pendente {
+            background: #e9a23b;
+        }
+
+        .ponto-aprovado {
+            background: #29a35a;
+        }
+
+        .ponto-recusado {
+            background: #d94c4c;
+        }
+
+        .ponto-vencido {
+            background: #7b61b5;
+        }
+
+        .status-quantidade {
+            font-weight: 700;
+            color: #202936;
+        }
+
+    
+        .tabela-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .tabela-container table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        .tabela-container th,
+        .tabela-container td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #edf0f4;
+            font-size: 13px;
+        }
+
+        .tabela-container th {
+            color: #778397;
+            background: #f8fafc;
+            font-weight: 600;
+        }
+
+        .tabela-container td {
+            color: #39485b;
+            vertical-align: middle;
+        }
+
+        .etiqueta-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            background: #edf0f4;
+            color: #526176;
+            white-space: nowrap;
+        }
+
+        .etiqueta-pendente {
+            background: #fff2d8;
+            color: #9a6508;
+        }
+
+        .etiqueta-aprovado {
+            background: #def5e6;
+            color: #207b43;
+        }
+
+        .etiqueta-recusado {
+            background: #fde5e5;
+            color: #b72e2e;
+        }
+
+        .etiqueta-vencido {
+            background: #eee8ff;
+            color: #6e4ab2;
+        }
+
+        .sem-dados {
+            padding: 32px 16px !important;
+            text-align: center !important;
+            color: #8994a3 !important;
+        }
+
+
+        .mensagem-info {
+            padding: 13px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background: #edf5ff;
+            color: #315d91;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+
+        .rodape-relatorio {
+            margin-top: 22px;
+            color: #8a95a5;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .titulo-com-icone {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .titulo-com-icone i {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 1100px) {
+            .cards-relatorio {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .filtros-relatorio {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .relatorio-grafico {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .conteudo {
+                padding: 18px;
+            }
+
+            .cards-relatorio,
+            .filtros-relatorio {
+                grid-template-columns: 1fr;
+            }
+
+            .barra-linha {
+                grid-template-columns: 85px minmax(0, 1fr);
+            }
+
+            .barra-valor {
+                grid-column: 2;
+            }
+
+            .relatorios-acoes {
+                width: 100%;
+            }
+
+            .relatorios-acoes button {
+                flex: 1;
+            }
+        }
+
+        @media print {
+            .sidebar,
+            .relatorios-acoes,
+            .filtros-secao,
+            .painel-icone,
+            .botao {
+                display: none !important;
+            }
+
+            .conteudo {
+                margin-left: 0 !important;
+                padding: 0 !important;
+            }
+
+            body {
+                background: #fff !important;
+            }
+
+            .card-relatorio,
+            .secao {
+                box-shadow: none !important;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">A</div>
+
+            <div>
+                <h2>Auto<span>Peças</span></h2>
+                <small>Sistema de Gestão</small>
+            </div>
+        </div>
+
+        <p class="menu-titulo">MENU PRINCIPAL</p>
+
+        <nav class="menu">
+            <a href="index.html">
+                <i data-lucide="layout-dashboard"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="clientes.html">
+                <i data-lucide="users-round"></i>
+                <span>Clientes</span>
+            </a>
+
+            <a href="veiculos.html">
+                <i data-lucide="car-front"></i>
+                <span>Veículos</span>
+            </a>
+
+            <a href="produtos.html">
+                <i data-lucide="package"></i>
+                <span>Produtos</span>
+            </a>
+
+            <a href="estoque.html">
+                <i data-lucide="boxes"></i>
+                <span>Estoque</span>
+            </a>
+
+            <a href="orcamentos.html">
+                <i data-lucide="file-text"></i>
+                <span>Orçamentos</span>
+            </a>
+
+            <a href="relatorios.html" class="ativo">
+                <i data-lucide="chart-no-axes-column"></i>
+                <span>Relatórios</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-rodape">
+            <span class="status-bolinha"></span>
+
+            <div>
+                <p>Sistema operacional</p>
+                <small>AutoPeças Gestão</small>
+            </div>
+        </div>
+    </aside>
+
+    <main class="conteudo">
+
+        <section class="painel-controle">
+            <div class="painel-texto">
+                <span class="painel-etiqueta">ANÁLISE DO NEGÓCIO</span>
+                <h2>Relatórios</h2>
+                <p>
+                    Acompanhe os indicadores e consulte os resultados do sistema.
+                </p>
+            </div>
+
+        </section>
+
+        <div class="relatorios-topo">
+            <div>
+                <h2>Visão geral</h2>
+                <p>
+                    Os indicadores são calculados com os dados disponíveis
+                    no navegador.
+                </p>
+            </div>
+
+            <div class="relatorios-acoes">
+                <button
+                    type="button"
+                    class="botao botao-secundario botao-com-icone"
+                    id="atualizar"
+                >
+                    <i data-lucide="refresh-cw"></i>
+                    Atualizar
+                </button>
+
+                <button
+                    type="button"
+                    class="botao botao-principal botao-com-icone"
+                    id="imprimir"
+                >
+                    <i data-lucide="printer"></i>
+                    Imprimir relatório
+                </button>
+            </div>
+        </div>
+
+        <div id="mensagemInfo" class="mensagem-info" hidden></div>
+
+        <section class="secao filtros-secao">
+            <div class="secao-cabecalho">
+                <div>
+                    <h2 class="titulo-com-icone">
+                        <i data-lucide="sliders-horizontal"></i>
+                        Filtros
+                    </h2>
+                    <p>Escolha o período e o status dos orçamentos.</p>
+                </div>
+            </div>
+
+            <div class="filtros-relatorio">
+                <div class="campo">
+                    <label for="dataInicio">Data inicial</label>
+                    <input type="date" id="dataInicio">
+                </div>
+
+                <div class="campo">
+                    <label for="dataFim">Data final</label>
+                    <input type="date" id="dataFim">
+                </div>
+
+                <div class="campo">
+                    <label for="filtroStatus">Status do orçamento</label>
+                    <select id="filtroStatus">
+                        <option value="">Todos os status</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Aprovado">Aprovado</option>
+                        <option value="Recusado">Recusado</option>
+                        <option value="Vencido">Vencido</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="buscaCliente">Buscar cliente</label>
+                    <input
+                        type="search"
+                        id="buscaCliente"
+                        placeholder="Digite o nome do cliente"
+                    >
+                </div>
+            </div>
+        </section>
+
+        <section class="cards-relatorio">
+
+            <article class="card-relatorio">
+                <div class="card-icone icone-laranja">
+                    <i data-lucide="users-round"></i>
+                </div>
+
+                <div class="card-titulo">Clientes cadastrados</div>
+                <div class="card-valor" id="totalClientes">0</div>
+                <div class="card-descricao">
+                    Total encontrado no armazenamento local
+                </div>
+            </article>
+
+            <article class="card-relatorio">
+                <div class="card-icone icone-azul">
+                    <i data-lucide="package"></i>
+                </div>
+
+                <div class="card-titulo">Produtos cadastrados</div>
+                <div class="card-valor" id="totalProdutos">0</div>
+                <div class="card-descricao">
+                    Total encontrado no armazenamento local
+                </div>
+            </article>
+
+            <article class="card-relatorio">
+                <div class="card-icone icone-verde">
+                    <i data-lucide="file-check"></i>
+                </div>
+
+                <div class="card-titulo">Orçamentos encontrados</div>
+                <div class="card-valor" id="totalOrcamentos">0</div>
+                <div class="card-descricao">
+                    Conforme os filtros selecionados
+                </div>
+            </article>
+
+            <article class="card-relatorio">
+                <div class="card-icone icone-roxo">
+                    <i data-lucide="wallet"></i>
+                </div>
+
+                <div class="card-titulo">Valor dos orçamentos</div>
+                <div class="card-valor" id="valorOrcamentos">R$ 0,00</div>
+                <div class="card-descricao">
+                    Soma dos orçamentos filtrados
+                </div>
+            </article>
+
+        </section>
+
+        <section class="relatorio-grafico">
+
+            <div class="secao">
+                <div class="secao-cabecalho">
+                    <div>
+                        <h2 class="titulo-com-icone">
+                            <i data-lucide="chart-no-axes-column"></i>
+                            Valores por status
+                        </h2>
+                        <p>
+                            Distribuição do valor dos orçamentos filtrados.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grafico-area" id="graficoStatus"></div>
+            </div>
+
+            <div class="secao">
+                <div class="secao-cabecalho">
+                    <div>
+                        <h2 class="titulo-com-icone">
+                            <i data-lucide="chart-pie"></i>
+                            Situação dos orçamentos
+                        </h2>
+                        <p>Quantidade por status.</p>
+                    </div>
+                </div>
+
+                <div id="resumoStatus"></div>
+            </div>
+
+        </section>
+
+        <section class="secao">
+            <div class="secao-cabecalho">
+                <div>
+                    <h2 class="titulo-com-icone">
+                        <i data-lucide="clipboard-list"></i>
+                        Relatório de orçamentos
+                    </h2>
+                    <p>
+                        Lista detalhada conforme os filtros aplicados.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Cliente</th>
+                            <th>Data</th>
+                            <th>Validade</th>
+                            <th>Status</th>
+                            <th>Valor total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tabelaOrcamentos">
+                        <tr>
+                            <td colspan="6" class="sem-dados">
+                                Carregando dados...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="rodape-relatorio">
+                <span id="quantidadeResultados">0 registros</span>
+                <span id="dataGeracao"></span>
+            </div>
+        </section>
+
+        <section class="secao">
+            <div class="secao-cabecalho">
+                <div>
+                    <h2 class="titulo-com-icone">
+                        <i data-lucide="boxes"></i>
+                        Relatório de estoque
+                    </h2>
+                    <p>
+                        Resumo das quantidades dos produtos cadastrados.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Quantidade em estoque</th>
+                            <th>Situação</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tabelaEstoque">
+                        <tr>
+                            <td colspan="3" class="sem-dados">
+                                Nenhum dado de estoque disponível.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        (() => {
+            const CHAVES = {
+                orcamentos: ["autopecas_orcamentos", "orcamentos", "listaOrcamentos"],
+                clientes: ["autopecas_clientes", "clientes", "listaClientes"],
+                produtos: ["autopecas_produtos", "produtos", "listaProdutos"],
+                estoque: ["autopecas_estoque", "estoque", "listaEstoque"]
+            };
+
+            const $ = id => document.getElementById(id);
+
+            // Lê listas do armazenamento local.
+            function lerLista(chaves) {
+                for (const chave of chaves) {
+                    try {
+                        const valor = JSON.parse(localStorage.getItem(chave));
+
+                        if (Array.isArray(valor)) {
+                            return valor;
+                        }
+                    } catch (erro) {
+                        console.warn("Não foi possível ler:", chave);
+                    }
+                }
+
+                return [];
+            }
+
+        
+            function moeda(valor) {
+                return Number(valor || 0).toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL"
+                });
+            }
+
+    
+            function escapar(texto) {
+                return String(texto ?? "").replace(/[&<>"']/g, c => ({
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                })[c]);
+            }
+
+            function dataHoje() {
+                const agora = new Date();
+                const local = new Date(
+                    agora.getTime() - agora.getTimezoneOffset() * 60000
+                );
+
+                return local.toISOString().slice(0, 10);
+            }
+
+            function dataBR(data) {
+                if (!data) return "—";
+
+                const texto = String(data);
+                const partes = texto.split("-");
+
+                if (
+                    partes.length === 3 &&
+                    partes[0].length === 4
+                ) {
+                    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+                }
+
+                return escapar(texto);
+            }
+
+        
+            function statusNormalizado(orcamento) {
+                let status = String(
+                    orcamento.status || "Pendente"
+                ).trim();
+
+                const validade = orcamento.validade;
+
+                if (
+                    status.toLowerCase() === "pendente" &&
+                    validade &&
+                    validade < dataHoje()
+                ) {
+                    status = "Vencido";
+                }
+
+                const aceitos = [
+                    "Pendente",
+                    "Aprovado",
+                    "Recusado",
+                    "Vencido"
+                ];
+
+                return aceitos.find(item =>
+                    item.toLowerCase() === status.toLowerCase()
+                ) || "Pendente";
+            }
+
+            function nomeProduto(produto) {
+                if (typeof produto === "string") return produto;
+
+                return produto.nome ||
+                    produto.produto ||
+                    produto.descricao ||
+                    produto.nomeProduto ||
+                    produto.name ||
+                    "Produto";
+            }
+
+            function quantidadeEstoque(produto) {
+                const valor =
+                    produto.quantidadeEstoque ??
+                    produto.quantidade ??
+                    produto.estoqueAtual ??
+                    produto.estoque ??
+                    produto.saldo;
+
+                if (valor === undefined || valor === null || valor === "") {
+                    return null;
+                }
+
+                const numero = Number(valor);
+                return Number.isFinite(numero) ? numero : null;
+            }
+
+        
+            function totalOrcamento(orcamento) {
+                if (
+                    orcamento.total !== undefined &&
+                    orcamento.total !== null &&
+                    orcamento.total !== "" &&
+                    Number.isFinite(Number(orcamento.total))
+                ) {
+                    return Number(orcamento.total);
+                }
+
+                if (Array.isArray(orcamento.itens)) {
+                    return orcamento.itens.reduce((soma, item) => {
+                        const quantidade = Number(item.quantidade) || 0;
+
+                        const preco = Number(
+                            item.preco ?? item.valorUnitario
+                        ) || 0;
+
+                        const subtotal =
+                            item.subtotal !== undefined
+                                ? Number(item.subtotal) || 0
+                                : quantidade * preco;
+
+                        return soma + subtotal;
+                    }, 0);
+                }
+
+                return 0;
+            }
+
+            function carregarDados() {
+                return {
+                    orcamentos: lerLista(CHAVES.orcamentos),
+                    clientes: lerLista(CHAVES.clientes),
+                    produtos: lerLista(CHAVES.produtos),
+                    estoque: lerLista(CHAVES.estoque)
+                };
+            }
+
+            function aplicarFiltros(orcamentos) {
+                const inicio = $("dataInicio").value;
+                const fim = $("dataFim").value;
+                const status = $("filtroStatus").value;
+
+                const busca = $("buscaCliente")
+                    .value.trim().toLocaleLowerCase("pt-BR");
+
+                return orcamentos.filter(orcamento => {
+                    const data = String(orcamento.data || "");
+                    const nome = String(orcamento.cliente || "")
+                        .toLocaleLowerCase("pt-BR");
+
+                    const situacao = statusNormalizado(orcamento);
+
+                    if (inicio && (!data || data < inicio)) return false;
+                    if (fim && (!data || data > fim)) return false;
+                    if (status && situacao !== status) return false;
+                    if (busca && !nome.includes(busca)) return false;
+
+                    return true;
+                });
+            }
+
+        
+            function renderizarStatus(orcamentos) {
+                const statusLista = [
+                    "Pendente",
+                    "Aprovado",
+                    "Recusado",
+                    "Vencido"
+                ];
+
+                const contagem = {};
+                const valores = {};
+
+                statusLista.forEach(status => {
+                    contagem[status] = 0;
+                    valores[status] = 0;
+                });
+
+                orcamentos.forEach(orcamento => {
+                    const status = statusNormalizado(orcamento);
+
+                    contagem[status]++;
+                    valores[status] += totalOrcamento(orcamento);
+                });
+
+                $("resumoStatus").innerHTML = statusLista.map(status => {
+                    const classe = status.toLowerCase();
+
+                    return `
+                        <div class="status-resumo">
+                            <div class="status-nome">
+                                <span class="status-ponto ponto-${classe}"></span>
+                                ${status}
+                            </div>
+
+                            <strong class="status-quantidade">
+                                ${contagem[status]}
+                            </strong>
+                        </div>
+                    `;
+                }).join("");
+
+                const maiorValor = Math.max(
+                    ...Object.values(valores),
+                    0
+                );
+
+                $("graficoStatus").innerHTML = statusLista.map(status => {
+                    const valor = valores[status];
+
+                    const largura = maiorValor > 0
+                        ? (valor / maiorValor) * 100
+                        : 0;
+
+                    return `
+                        <div class="barra-linha">
+                            <span class="barra-label">${status}</span>
+
+                            <div class="barra-fundo">
+                                <div
+                                    class="barra-preenchida"
+                                    style="width:${largura}%"
+                                ></div>
+                            </div>
+
+                            <span class="barra-valor">${moeda(valor)}</span>
+                        </div>
+                    `;
+                }).join("");
+            }
+
+        
+            function renderizarTabelaOrcamentos(orcamentos) {
+                const tbody = $("tabelaOrcamentos");
+
+                if (!orcamentos.length) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="sem-dados">
+                                Nenhum orçamento encontrado para os filtros selecionados.
+                            </td>
+                        </tr>
+                    `;
+
+                    return;
+                }
+
+                tbody.innerHTML = orcamentos.map(orcamento => {
+                    const status = statusNormalizado(orcamento);
+                    const classe = status.toLowerCase();
+
+                    return `
+                        <tr>
+                            <td>${escapar(orcamento.numero || "—")}</td>
+                            <td>${escapar(orcamento.cliente || "—")}</td>
+                            <td>${dataBR(orcamento.data)}</td>
+                            <td>${dataBR(orcamento.validade)}</td>
+
+                            <td>
+                                <span class="etiqueta-status etiqueta-${classe}">
+                                    ${status}
+                                </span>
+                            </td>
+
+                            <td>${moeda(totalOrcamento(orcamento))}</td>
+                        </tr>
+                    `;
+                }).join("");
+            }
+
+            
+            function renderizarEstoque(dados) {
+                const produtos = dados.estoque.length
+                    ? dados.estoque
+                    : dados.produtos;
+
+                const tbody = $("tabelaEstoque");
+
+                const comQuantidade = produtos.filter(produto =>
+                    typeof produto === "object" &&
+                    produto !== null &&
+                    quantidadeEstoque(produto) !== null
+                );
+
+                if (!comQuantidade.length) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="3" class="sem-dados">
+                                Não foram encontrados campos de estoque nos produtos cadastrados.
+                            </td>
+                        </tr>
+                    `;
+
+                    return;
+                }
+
+                tbody.innerHTML = comQuantidade.map(produto => {
+                    const quantidade = quantidadeEstoque(produto);
+
+                    const minimo = Number(
+                        produto.estoqueMinimo ??
+                        produto.quantidadeMinima ??
+                        produto.minimo ??
+                        5
+                    );
+
+                    const esgotado = quantidade === 0;
+                    const baixo = quantidade <= minimo;
+
+                    let texto;
+                    let classe;
+
+                    if (esgotado) {
+                        texto = "Esgotado";
+                        classe = "etiqueta-recusado";
+                    } else if (baixo) {
+                        texto = "Estoque baixo";
+                        classe = "etiqueta-pendente";
+                    } else {
+                        texto = "Disponível";
+                        classe = "etiqueta-aprovado";
+                    }
+
+                    return `
+                        <tr>
+                            <td>${escapar(nomeProduto(produto))}</td>
+                            <td>${quantidade}</td>
+                            <td>
+                                <span class="etiqueta-status ${classe}">
+                                    ${texto}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                }).join("");
+            }
+
+            
+            function atualizar() {
+                const dados = carregarDados();
+                const filtrados = aplicarFiltros(dados.orcamentos);
+
+                $("totalClientes").textContent = dados.clientes.length;
+                $("totalProdutos").textContent = dados.produtos.length;
+                $("totalOrcamentos").textContent = filtrados.length;
+
+                const total = filtrados.reduce(
+                    (soma, orcamento) =>
+                        soma + totalOrcamento(orcamento),
+                    0
+                );
+
+                $("valorOrcamentos").textContent = moeda(total);
+
+                renderizarStatus(filtrados);
+                renderizarTabelaOrcamentos(filtrados);
+                renderizarEstoque(dados);
+
+                $("quantidadeResultados").textContent =
+                    `${filtrados.length} registro(s) encontrado(s)`;
+
+                $("dataGeracao").textContent =
+                    `Atualizado em ${new Date().toLocaleString("pt-BR")}`;
+
+                const mensagem = $("mensagemInfo");
+
+                if (!dados.orcamentos.length) {
+                    mensagem.hidden = false;
+                    mensagem.textContent =
+                        "Ainda não há orçamentos salvos no armazenamento local. Cadastre um orçamento para visualizar os indicadores.";
+                } else {
+                    mensagem.hidden = true;
+                }
+
+                lucide.createIcons();
+            }
+
+        
+            ["dataInicio", "dataFim", "filtroStatus"].forEach(id => {
+                $(id).addEventListener("change", atualizar);
+            });
+
+            $("buscaCliente").addEventListener("input", atualizar);
+            $("atualizar").addEventListener("click", atualizar);
+
+            $("imprimir").addEventListener("click", () => {
+                window.print();
+            });
+
+            
+            const hoje = dataHoje();
+
+            $("dataInicio").value = `${hoje.slice(0, 7)}-01`;
+            $("dataFim").value = hoje;
+
+            atualizar();
+        })();
+    </script>
+
+</body>
+</html>

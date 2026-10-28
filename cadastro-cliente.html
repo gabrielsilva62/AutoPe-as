@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar conta | AutoPeças</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --laranja: #f28c28;
+            --laranja-hover: #dc7615;
+            --azul: #202936;
+            --fundo: #f4f6f9;
+            --cinza: #7a8698;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 35px 18px;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at top right, #fbe6d0, transparent 35%),
+                var(--fundo);
+            color: var(--azul);
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .logo-icone {
+            width: 45px;
+            height: 45px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: var(--laranja);
+            color: white;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+        }
+
+        .logo h1 span {
+            color: var(--laranja);
+        }
+
+        .logo small {
+            display: block;
+            margin-top: 3px;
+            color: var(--cinza);
+            font-size: 10px;
+            letter-spacing: 1.5px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 32px;
+            border: 1px solid #e7ebf0;
+            border-radius: 16px;
+            background: white;
+            box-shadow: 0 12px 40px #2029360b;
+        }
+
+        .cabecalho {
+            margin-bottom: 28px;
+        }
+
+        .cabecalho h2 {
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .cabecalho p {
+            color: var(--cinza);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .secao-titulo {
+            margin: 27px 0 17px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9edf2;
+            font-size: 15px;
+        }
+
+        .grade {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .campo {
+            min-width: 0;
+        }
+
+        .campo.completo {
+            grid-column: 1 / -1;
+        }
+
+        .campo label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .campo input,
+        .campo select {
+            width: 100%;
+            height: 46px;
+            padding: 0 12px;
+            border: 1px solid #dce2ea;
+            border-radius: 8px;
+            outline: none;
+            background: white;
+            color: var(--azul);
+            font-size: 14px;
+        }
+
+        .campo input:focus,
+        .campo select:focus {
+            border-color: var(--laranja);
+            box-shadow: 0 0 0 3px #f28c281c;
+        }
+
+        .campo small {
+            display: block;
+            margin-top: 6px;
+            color: var(--cinza);
+            font-size: 11px;
+        }
+
+        .senha-container {
+            position: relative;
+        }
+
+        .senha-container input {
+            padding-right: 75px;
+        }
+
+        .mostrar {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            color: #69778a;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .termos {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            margin-top: 25px;
+            color: #59677a;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .termos input {
+            margin-top: 3px;
+            accent-color: var(--laranja);
+        }
+
+        .botao {
+            width: 100%;
+            height: 49px;
+            margin-top: 23px;
+            border: none;
+            border-radius: 9px;
+            background: var(--laranja);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .botao:hover {
+            background: var(--laranja-hover);
+        }
+
+        .mensagem {
+            display: none;
+            padding: 13px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            background: #fff0df;
+            color: #8c4d0c;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .mensagem.sucesso {
+            background: #e3f7e9;
+            color: #207b43;
+        }
+
+        .login-link {
+            margin-top: 23px;
+            text-align: center;
+            color: var(--cinza);
+            font-size: 13px;
+        }
+
+        a {
+            color: var(--laranja-hover);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .voltar {
+            display: block;
+            margin-top: 22px;
+            text-align: center;
+            color: var(--cinza);
+            font-size: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 22px 17px;
+            }
+
+            .grade {
+                grid-template-columns: 1fr;
+            }
+
+            .campo.completo {
+                grid-column: auto;
+            }
+
+            .cabecalho h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="logo">
+        <div class="logo-icone">A</div>
+        <div>
+            <h1>Auto<span>Peças</span></h1>
+            <small>GESTÃO AUTOMOTIVA</small>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="cabecalho">
+            <h2>Crie sua conta</h2>
+            <p>
+                Preencha os dados abaixo para se cadastrar como cliente
+                e acessar sua área pessoal.
+            </p>
+        </div>
+
+        <div class="mensagem" id="mensagem" role="status"></div>
+
+        <form id="formCadastro">
+
+            <h3 class="secao-titulo">Dados pessoais</h3>
+
+            <div class="grade">
+                <div class="campo completo">
+                    <label for="nome">Nome completo *</label>
+                    <input
+                        type="text"
+                        id="nome"
+                        autocomplete="name"
+                        placeholder="Digite seu nome completo"
+                        required
+                        minlength="3"
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="cpf">CPF *</label>
+                    <input
+                        type="text"
+                        id="cpf"
+                        inputmode="numeric"
+                        placeholder="000.000.000-00"
+                        maxlength="14"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="telefone">Telefone *</label>
+                    <input
+                        type="tel"
+                        id="telefone"
+                        inputmode="tel"
+                        autocomplete="tel"
+                        placeholder="(00) 00000-0000"
+                        maxlength="15"
+                        required
+                    >
+                </div>
+
+                <div class="campo completo">
+                    <label for="email">E-mail *</label>
+                    <input
+                        type="email"
+                        id="email"
+                        autocomplete="email"
+                        placeholder="seuemail@exemplo.com"
+                        required
+                    >
+                </div>
+            </div>
+
+            <h3 class="secao-titulo">Endereço</h3>
+
+            <div class="grade">
+                <div class="campo">
+                    <label for="cep">CEP *</label>
+                    <input
+                        type="text"
+                        id="cep"
+                        inputmode="numeric"
+                        autocomplete="postal-code"
+                        placeholder="00000-000"
+                        maxlength="9"
+                        required
+                    >
+                    <small id="statusCep">Digite o CEP para buscar o endereço.</small>
+                </div>
+
+                <div class="campo">
+                    <label for="estado">Estado *</label>
+                    <input
+                        type="text"
+                        id="estado"
+                        maxlength="2"
+                        placeholder="UF"
+                        autocomplete="address-level1"
+                        required
+                    >
+                </div>
+
+                <div class="campo completo">
+                    <label for="endereco">Rua / Avenida *</label>
+                    <input
+                        type="text"
+                        id="endereco"
+                        autocomplete="address-line1"
+                        placeholder="Nome da rua ou avenida"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="numero">Número *</label>
+                    <input
+                        type="text"
+                        id="numero"
+                        placeholder="Número da residência"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="complemento">Complemento</label>
+                    <input
+                        type="text"
+                        id="complemento"
+                        placeholder="Apartamento, bloco etc."
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="bairro">Bairro *</label>
+                    <input type="text" id="bairro" required>
+                </div>
+
+                <div class="campo">
+                    <label for="cidade">Cidade *</label>
+                    <input
+                        type="text"
+                        id="cidade"
+                        autocomplete="address-level2"
+                        required
+                    >
+                </div>
+            </div>
+
+            <h3 class="secao-titulo">Dados de acesso</h3>
+
+            <div class="grade">
+                <div class="campo completo">
+                    <label for="senha">Criar senha *</label>
+
+                    <div class="senha-container">
+                        <input
+                            type="password"
+                            id="senha"
+                            autocomplete="new-password"
+                            placeholder="Crie uma senha com pelo menos 8 caracteres"
+                            minlength="8"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="mostrar"
+                            data-campo="senha"
+                        >
+                            Mostrar
+                        </button>
+                    </div>
+
+                    <small>Use pelo menos 8 caracteres.</small>
+                </div>
+
+                <div class="campo completo">
+                    <label for="confirmarSenha">Confirmar senha *</label>
+
+                    <div class="senha-container">
+                        <input
+                            type="password"
+                            id="confirmarSenha"
+                            autocomplete="new-password"
+                            placeholder="Digite a senha novamente"
+                            minlength="8"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="mostrar"
+                            data-campo="confirmarSenha"
+                        >
+                            Mostrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <label class="termos">
+                <input type="checkbox" id="aceite" required>
+                <span>
+                    Confirmo que as informações fornecidas estão corretas
+                    e concordo com os termos de uso e a política de privacidade.
+                </span>
+            </label>
+
+            <button type="submit" class="botao">Criar minha conta</button>
+
+        </form>
+
+        <div class="login-link">
+            Já possui uma conta?
+            <a href="login.html">Entrar</a>
+        </div>
+
+        <a class="voltar" href="login.html">← Voltar para o login</a>
+    </main>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const form = $("formCadastro");
+        const mensagem = $("mensagem");
+        const statusCep = $("statusCep");
+
+        function mostrarMensagem(texto, sucesso = false) {
+            mensagem.textContent = texto;
+            mensagem.classList.toggle("sucesso", sucesso);
+            mensagem.style.display = "block";
+            mensagem.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+
+        function somenteNumeros(valor) {
+            return valor.replace(/\D/g, "");
+        }
+
+        $("cpf").addEventListener("input", function () {
+            let v = somenteNumeros(this.value).slice(0, 11);
+
+            v = v.replace(/(\d{3})(\d)/, "$1.$2");
+            v = v.replace(/(\d{3})(\d)/, "$1.$2");
+            v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+            this.value = v;
+        });
+
+        $("telefone").addEventListener("input", function () {
+            let v = somenteNumeros(this.value).slice(0, 11);
+
+            if (v.length > 10) {
+                v = v.replace(/^(\d{2})(\d{5})(\d{0,4}).*/, "($1) $2-$3");
+            } else if (v.length > 6) {
+                v = v.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+            } else if (v.length > 2) {
+                v = v.replace(/^(\d{2})(\d+)/, "($1) $2");
+            } else if (v.length > 0) {
+                v = v.replace(/^(\d+)/, "($1");
+            }
+
+            this.value = v;
+        });
+
+        $("cep").addEventListener("input", function () {
+            let v = somenteNumeros(this.value).slice(0, 8);
+
+            if (v.length > 5) {
+                v = v.slice(0, 5) + "-" + v.slice(5);
+            }
+
+            this.value = v;
+        });
+
+        document.querySelectorAll(".mostrar").forEach(botao => {
+            botao.addEventListener("click", function () {
+                const campo = $(this.dataset.campo);
+                const mostrar = campo.type === "password";
+
+                campo.type = mostrar ? "text" : "password";
+                this.textContent = mostrar ? "Ocultar" : "Mostrar";
+            });
+        });
+
+        let ultimaConsulta = "";
+
+        $("cep").addEventListener("blur", async function () {
+            const cep = somenteNumeros(this.value);
+
+            if (cep.length !== 8 || cep === ultimaConsulta) return;
+
+            ultimaConsulta = cep;
+            statusCep.textContent = "Buscando endereço...";
+
+            try {
+                const resposta = await fetch(
+                    `https://viacep.com.br/ws/${cep}/json/`
+                );
+
+                if (!resposta.ok) {
+                    throw new Error("Falha na consulta.");
+                }
+
+                const dados = await resposta.json();
+
+                if (dados.erro) {
+                    statusCep.textContent = "CEP não encontrado.";
+                    return;
+                }
+
+                $("endereco").value = dados.logradouro || "";
+                $("bairro").value = dados.bairro || "";
+                $("cidade").value = dados.localidade || "";
+                $("estado").value = dados.uf || "";
+                $("complemento").value = dados.complemento || "";
+
+                statusCep.textContent = "Endereço localizado.";
+            } catch (erro) {
+                statusCep.textContent =
+                    "Não foi possível consultar. Preencha o endereço manualmente.";
+            }
+        });
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            mensagem.style.display = "none";
+
+            const cpf = somenteNumeros($("cpf").value);
+            const telefone = somenteNumeros($("telefone").value);
+            const cep = somenteNumeros($("cep").value);
+            const senha = $("senha").value;
+            const confirmar = $("confirmarSenha").value;
+
+            if (cpf.length !== 11) {
+                mostrarMensagem("Informe um CPF com 11 dígitos.");
+                $("cpf").focus();
+                return;
+            }
+
+            if (telefone.length < 10 || telefone.length > 11) {
+                mostrarMensagem("Informe um telefone válido com DDD.");
+                $("telefone").focus();
+                return;
+            }
+
+            if (cep.length !== 8) {
+                mostrarMensagem("Informe um CEP válido com 8 dígitos.");
+                $("cep").focus();
+                return;
+            }
+
+            if (senha.length < 8) {
+                mostrarMensagem("A senha precisa ter pelo menos 8 caracteres.");
+                $("senha").focus();
+                return;
+            }
+
+            if (senha !== confirmar) {
+                mostrarMensagem("As senhas não são iguais.");
+                $("confirmarSenha").focus();
+                return;
+            }
+
+            mostrarMensagem(
+                "Os dados foram validados no formulário. Para criar a conta de verdade, precisamos conectar esta página ao backend e ao banco de dados. Nenhuma senha foi armazenada.",
+                true
+            );
+        });
+    </script>
+
+</body>
+</html>
